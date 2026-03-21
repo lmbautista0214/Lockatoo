@@ -1,0 +1,22 @@
+{
+  "name": "group3",
+  "version": "1.0.0",
+  "description": "Baggage Counter",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/uplift-code-camp/students/batch-28/group-project/group3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://gitlab.com/uplift-code-camp/students/batch-28/group-project/group3/issues"
+  },
+  "homepage": "https://gitlab.com/uplift-code-camp/students/batch-28/group-project/group3#readme"
+}
