@@ -18,5 +18,18 @@
   "bugs": {
     "url": "https://gitlab.com/uplift-code-camp/students/batch-28/group-project/group3/issues"
   },
-  "homepage": "https://gitlab.com/uplift-code-camp/students/batch-28/group-project/group3#readme"
+  "homepage": "https://gitlab.com/uplift-code-camp/students/batch-28/group-project/group3#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-mongo": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "google-auth-library": "^10.6.2",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.1",
+    "nodemailer": "^8.0.3"
+  }
 }
