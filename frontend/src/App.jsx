@@ -1,7 +1,10 @@
+import MockPayment from "./components/MockPayment";
+
 function App() {
 
   return (
     <>
+      <MockPayment />
     </>
   )
 }
