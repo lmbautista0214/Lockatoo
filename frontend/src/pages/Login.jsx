@@ -2,16 +2,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
   const inputStyle = (error) =>
-    `w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-0 transition
+    `w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none transition
      ${
        error
          ? "border-red-500 focus:border-red-500"
@@ -20,6 +21,7 @@ export const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     const newValue = name === "email" ? value.trim().toLowerCase() : value;
 
     setFormData((prev) => ({
@@ -36,6 +38,7 @@ export const Login = () => {
 
   const validate = () => {
     let newErrors = {};
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formData.email.trim()) {
@@ -82,7 +85,7 @@ export const Login = () => {
 
       alert("Login successfully!");
 
-      navigate("/locker"); // ✅ redirect after login
+      navigate("/lockers");
     } catch (error) {
       console.log(error);
       alert("Something went wrong");

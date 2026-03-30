@@ -16,7 +16,7 @@ export const Register = () => {
   const [errors, setErrors] = useState({});
 
   const inputStyle = (error) =>
-    `w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-0 transition
+    `w-full border rounded-xl px-4 py-3 focus:outline-none transition
      ${
        error
          ? "border-red-500 focus:border-red-500"
@@ -25,6 +25,7 @@ export const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     const newValue = name === "email" ? value.trim().toLowerCase() : value;
 
     setFormData((prev) => ({
@@ -110,87 +111,70 @@ export const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              className={inputStyle(errors.name)}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
-            )}
-          </div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={formData.name}
+            onChange={handleChange}
+            className={inputStyle(errors.name)}
+          />
+          {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
 
-          <div>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              className={inputStyle(errors.email)}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-            )}
-          </div>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className={inputStyle(errors.email)}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs">{errors.email}</p>
+          )}
 
-          <div>
-            <input
-              type="text"
-              name="contactNumber"
-              placeholder="Phone Number"
-              value={formData.contactNumber}
-              onChange={handleChange}
-              className={inputStyle(errors.contactNumber)}
-            />
-            {errors.contactNumber && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.contactNumber}
-              </p>
-            )}
-          </div>
+          <input
+            type="text"
+            name="contactNumber"
+            placeholder="Phone Number"
+            value={formData.contactNumber}
+            onChange={handleChange}
+            className={inputStyle(errors.contactNumber)}
+          />
+          {errors.contactNumber && (
+            <p className="text-red-500 text-xs">{errors.contactNumber}</p>
+          )}
 
-          <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              className={inputStyle(errors.password)}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-            )}
-          </div>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className={inputStyle(errors.password)}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-xs">{errors.password}</p>
+          )}
 
-          <div>
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className={inputStyle(errors.confirmPassword)}
-            />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.confirmPassword}
-              </p>
-            )}
-          </div>
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className={inputStyle(errors.confirmPassword)}
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
+          )}
 
           <div className="grid grid-cols-2 gap-3">
             <label
-              className={`cursor-pointer rounded-xl border p-3 text-center font-medium transition 
-              ${
+              className={`cursor-pointer rounded-xl border p-3 text-center font-medium transition ${
                 formData.role === "user"
                   ? "bg-orange-500 text-white border-orange-500"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-orange-400"
+                  : "bg-white text-gray-600 border-gray-300"
               }`}
             >
               <input
@@ -205,11 +189,10 @@ export const Register = () => {
             </label>
 
             <label
-              className={`cursor-pointer rounded-xl border p-3 text-center font-medium transition 
-              ${
+              className={`cursor-pointer rounded-xl border p-3 text-center font-medium transition ${
                 formData.role === "admin"
                   ? "bg-orange-500 text-white border-orange-500"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-orange-400"
+                  : "bg-white text-gray-600 border-gray-300"
               }`}
             >
               <input
@@ -224,10 +207,7 @@ export const Register = () => {
             </label>
           </div>
 
-          <button
-            type="submit"
-            className="cursor-pointer w-full bg-linear-to-r from-orange-400 to-orange-500 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition"
-          >
+          <button className="w-full bg-orange-500 text-white py-3 rounded-xl font-semibold">
             Create Account
           </button>
 
@@ -239,13 +219,6 @@ export const Register = () => {
             >
               Sign in here
             </span>
-          </p>
-
-          <p
-            onClick={() => navigate("/")}
-            className="text-center text-sm text-gray-400 mt-2 cursor-pointer hover:text-orange-500"
-          >
-            ← Back to home
           </p>
         </form>
       </div>
