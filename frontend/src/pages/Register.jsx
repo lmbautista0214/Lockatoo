@@ -1,197 +1,254 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        contactNumber: "",
-        role: "user"
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    contactNumber: "",
+    role: "user",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const inputStyle = (error) =>
+    `w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-0 transition
+     ${
+       error
+         ? "border-red-500 focus:border-red-500"
+         : "border-gray-300 focus:border-orange-500"
+     }`;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const newValue = name === "email" ? value.trim().toLowerCase() : value;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
+
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[name];
+      return newErrors;
     });
+  };
 
-    const [errors, setErrors] =  useState({});
+  const validate = () => {
+    let newErrors = {};
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*\d).{8,}$/;
+    const phoneRegex = /^09\d{9}$/;
 
-        const newValue =
-            name === "email"
-                ? value.trim().toLowerCase()
-                : value;
+    if (!formData.name.trim()) newErrors.name = "Name is required";
 
-            setFormData((prev) => ({
-            ...prev,
-            [name]: newValue
-        }));
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!emailRegex.test(formData.email))
+      newErrors.email = "Invalid email";
 
-        setErrors((prev) => {
-            const newErrors = { ...prev };
-            delete newErrors[name];
-            return newErrors;
-        });
-    };
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (!passwordRegex.test(formData.password))
+      newErrors.password = "Min 8 chars + 1 number";
 
-    const validate = () => {
-        let newErrors = {};
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "Confirm password";
+    else if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const passwordRegex = /^(?=.*\d).{8,}$/;
-        const phoneRegex = /^09\d{9}$/;
+    if (!formData.contactNumber) newErrors.contactNumber = "Contact required";
+    else if (!phoneRegex.test(formData.contactNumber))
+      newErrors.contactNumber = "Must start with 09";
 
-        if (!formData.name.trim()) {
-            newErrors.name = "Name is required";
-        }
+    return newErrors;
+  };
 
-        if (!formData.email) {
-            newErrors.email = "Email is required";
-        } else if (!emailRegex.test(formData.email)) {
-            newErrors.email = "Invalid email format";
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (!formData.password) {
-            newErrors.password = "Password is required";
-        } else if (!passwordRegex.test(formData.password)) {
-            newErrors.password = "Must contain at least 1 number";
-        }
+    const validationErrors = validate();
 
-        if (!formData.confirmPassword) {
-            newErrors.confirmPassword = "Confirm your password";
-        } else if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = "Passwords do not match";
-        }
-
-        if (!formData.contactNumber) {
-            newErrors.contactNumber = "Contact number is required";
-        } else if (!phoneRegex.test(formData.contactNumber)) {
-            newErrors.contactNumber = "Must be 11 digits starting with 09";
-        }
-
-        return newErrors;
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const validationErrors = validate();
-
-        if (Object.keys(validationErrors).length > 0){
-            setErrors(validationErrors)
-            return
-        }
-
-        try {
-            const res = await fetch ("http://localhost:5000/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await res.json();
-
-            if(!res.ok){
-                alert(data.message)
-                return;
-            }
-
-            alert("Registered successfully!");
-
-            setFormData({
-                name: "",
-                email: "",
-                password: "",
-                confirmPassword: "",
-                contactNumber: "",
-                role: "user"
-            });
-            setErrors({});
-            
-        } catch (error) {
-            console.log(error);
-            alert("Something went wrong")
-        }
-
-
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
     }
 
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) return alert(data.message);
+
+      alert("Registered successfully!");
+      navigate("/login");
+    } catch (error) {
+      alert("Something went wrong");
+    }
+  };
+
   return (
-    <div>
-      <h1>REGISTER</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="min-h-screen bg-[#f5efe6] flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div className="bg-[#fff4ed] py-10 text-center">
+          <div className="w-16 h-16 mx-auto bg-orange-500 rounded-2xl flex items-center justify-center text-white text-2xl mb-4 font-bold">
+            👤+
+          </div>
+          <h2 className="text-2xl font-bold text-orange-500">Join Lockatoo</h2>
+          <p className="text-gray-500 text-sm mt-2">
+            Create your account and get started
+          </p>
+        </div>
 
-        <input 
-            type="text" 
-            name="name" 
-            value={formData.name} 
-            onChange={handleChange}
-            placeholder="Juan Dela Cruz"
-        />
-        {errors.name && <p>{errors.name}</p>}
-
-        <input 
-            type="email" 
-            name="email" 
-            value={formData.email} 
-            onChange={handleChange}
-            placeholder="example@email.com"
-        />
-        {errors.email && <p>{errors.email}</p>}
-
-        <input 
-            type="password" 
-            name="password" 
-            value={formData.password} 
-            onChange={handleChange}
-            placeholder="Password"
-        />
-        {errors.password && <p>{errors.password}</p>}
-
-        <input 
-            type="password" 
-            name="confirmPassword" 
-            value={formData.confirmPassword} 
-            onChange={handleChange}
-            placeholder="Confirm Password"
-        />
-        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-
-        <input 
-            type="text" 
-            name="contactNumber" 
-            value={formData.contactNumber} 
-            onChange={handleChange}
-            placeholder="ex. 09123456789"
-        />
-        {errors.contactNumber && <p>{errors.contactNumber}</p>}
-
-        <p>Role:</p>
-
-        <label>
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div>
             <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              className={inputStyle(errors.name)}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              className={inputStyle(errors.email)}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="text"
+              name="contactNumber"
+              placeholder="Phone Number"
+              value={formData.contactNumber}
+              onChange={handleChange}
+              className={inputStyle(errors.contactNumber)}
+            />
+            {errors.contactNumber && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.contactNumber}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className={inputStyle(errors.password)}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={inputStyle(errors.confirmPassword)}
+            />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.confirmPassword}
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <label
+              className={`cursor-pointer rounded-xl border p-3 text-center font-medium transition 
+              ${
+                formData.role === "user"
+                  ? "bg-orange-500 text-white border-orange-500"
+                  : "bg-white text-gray-600 border-gray-300 hover:border-orange-400"
+              }`}
+            >
+              <input
                 type="radio"
                 name="role"
                 value="user"
                 checked={formData.role === "user"}
                 onChange={handleChange}
-            />
-        User
-        </label>
+                className="hidden"
+              />
+              User
+            </label>
 
-        <label>
-            <input
+            <label
+              className={`cursor-pointer rounded-xl border p-3 text-center font-medium transition 
+              ${
+                formData.role === "admin"
+                  ? "bg-orange-500 text-white border-orange-500"
+                  : "bg-white text-gray-600 border-gray-300 hover:border-orange-400"
+              }`}
+            >
+              <input
                 type="radio"
                 name="role"
                 value="admin"
                 checked={formData.role === "admin"}
                 onChange={handleChange}
-            />
-            Admin
+                className="hidden"
+              />
+              Admin
             </label>
+          </div>
 
-        <button type="submit">Submit</button>
-      </form>
+          <button
+            type="submit"
+            className="cursor-pointer w-full bg-linear-to-r from-orange-400 to-orange-500 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition"
+          >
+            Create Account
+          </button>
+
+          <p className="text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-orange-500 cursor-pointer"
+            >
+              Sign in here
+            </span>
+          </p>
+
+          <p
+            onClick={() => navigate("/")}
+            className="text-center text-sm text-gray-400 mt-2 cursor-pointer hover:text-orange-500"
+          >
+            ← Back to home
+          </p>
+        </form>
+      </div>
     </div>
-  )
-}
+  );
+};

@@ -1,120 +1,172 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
+  const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+
+  const inputStyle = (error) =>
+    `w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-0 transition
+     ${
+       error
+         ? "border-red-500 focus:border-red-500"
+         : "border-gray-300 focus:border-orange-500"
+     }`;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const newValue = name === "email" ? value.trim().toLowerCase() : value;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
+
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[name];
+      return newErrors;
     });
+  };
 
-    const [errors, setErrors] = useState({});
+  const validate = () => {
+    let newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        const newValue =
-            name === "email"
-                ? value.trim().toLowerCase()
-                : value;
-
-            setFormData((prev) => ({
-            ...prev,
-            [name]: newValue
-        }));
-
-        setErrors((prev) => {
-            const newErrors = { ...prev };
-            delete newErrors[name];
-            return newErrors;
-        });
-    };
-
-    const validate = () => {
-        let newErrors = {};
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!formData.email.trim()) {
-            newErrors.email = "Email is required";
-        } else if (!emailRegex.test(formData.email)) {
-            newErrors.email = "Invalid email format";
-        }
-
-        if (!formData.password) {
-            newErrors.password = "Password is required";
-        } 
-
-        return newErrors
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Invalid email format";
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    }
 
-        const validationErrors = validate();
+    return newErrors;
+  };
 
-        if (Object.keys(validationErrors).length > 0){
-            setErrors(validationErrors)
-            return
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-         try {
-            const res = await fetch ("http://localhost:5000/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            });
+    const validationErrors = validate();
 
-            const data = await res.json();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
-            if(!res.ok){
-                alert(data.message)
-                return;
-            }
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-            
-            alert("Login successfully!");
+      const data = await res.json();
 
-            setFormData({
-                email: "",
-                password: "",
-            });
-            setErrors({});
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
 
-        } catch (error) {
-            console.log(error);
-            alert("Something went wrong")
-        }
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-    } 
+      alert("Login successfully!");
+
+      navigate("/locker"); // ✅ redirect after login
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong");
+    }
+  };
 
   return (
-    <div>
-        <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input 
-            type="email" 
-            name="email" 
-            value={formData.email} 
-            onChange={handleChange}
-            placeholder="example@email.com"
-        />
-        {errors.email && <p>{errors.email}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-[#f5efe6] px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <div className="flex justify-center mb-6">
+          <div className="bg-orange-500 p-4 rounded-xl shadow-md">🔒</div>
+        </div>
 
-        <input 
-            type="password" 
-            name="password" 
-            value={formData.password} 
-            onChange={handleChange}
-            placeholder="Password"
-        />
-        {errors.password && <p>{errors.password}</p>}
+        <h1 className="text-2xl font-bold text-center text-orange-500">
+          Welcome Back!
+        </h1>
 
-        <button type="submit">Login</button>
-      </form>
+        <p className="text-center text-gray-500 text-sm mt-2">
+          Sign in to access your Lockatoo account
+        </p>
+
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <div>
+            <label className="text-sm text-gray-600">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="your@email.com"
+              className={inputStyle(errors.email)}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-600">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+              className={inputStyle(errors.password)}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
+          </div>
+
+          <p
+            onClick={() => navigate("/forgot-password")}
+            className="text-sm text-orange-500 cursor-pointer text-right"
+          >
+            Forgot password?
+          </p>
+
+          <button
+            type="submit"
+            className="w-full bg-linear-to-r from-orange-400 to-orange-500 text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Don't have an account?
+          <span
+            onClick={() => navigate("/register")}
+            className="text-orange-500 font-medium cursor-pointer pl-2"
+          >
+            Register here
+          </span>
+        </p>
+
+        <p
+          onClick={() => navigate("/")}
+          className="text-center text-sm text-gray-400 mt-2 cursor-pointer hover:text-orange-500"
+        >
+          ← Back to home
+        </p>
+      </div>
     </div>
-  )
-}
+  );
+};
