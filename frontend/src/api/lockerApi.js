@@ -5,8 +5,8 @@ const getHeaders = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`,
 });
 
-export const getLockers = async (storeId) => {
-  const res = await fetch(`${API_URL}/api/lockers/view/${storeId}`, {
+export const getLockers = async (locationId) => {
+  const res = await fetch(`${API_URL}/api/lockers/view/${locationId}`, {
     headers: getHeaders(),
   });
   return res.json();

@@ -14,22 +14,23 @@ export const LockerCard = ({
   };
 
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        handleLockerClick(locker);
-      }}
-      className={`relative cursor-pointer h-20 flex flex-col items-center justify-center rounded-2xl font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-lg hover:-translate-y-1 active:scale-95 ${
-        statusStyles[locker.status]
-      }`}
-    >
-      <span className="text-sm tracking-wide">{locker.code}</span>
-
-      <span className="text-[10px] opacity-80 capitalize">
-        {locker.status.replace("_", " ")}
-      </span>
-
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-white/10"></div>
+    <div className="relative flex flex-col items-center">
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          handleLockerClick(locker);
+        }}
+        title={locker.code}
+        className={`
+          w-10 h-10
+          rounded-lg flex items-center justify-center
+          text-white text-[10px] font-semibold
+          ${statusStyles[locker.status]}
+          shadow-sm hover:scale-105 active:scale-95 transition
+        `}
+      >
+        {locker.code.split("-")[1]}
+      </div>
 
       {activeLocker === locker._id && (
         <div

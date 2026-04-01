@@ -20,7 +20,7 @@ app.use(express.json());
 
 // routes
 app.use("/api/auth", authRoutes);
-app.use("/api/auth/locations", locationRoutes);
+app.use("/api/locations", locationRoutes);
 app.use("/api/lockers", lockerRoutes);
 app.use("/w1/api/booking/email-confirmation", sendEmailRoute);
 

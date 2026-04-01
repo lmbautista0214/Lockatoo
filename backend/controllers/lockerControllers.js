@@ -1,59 +1,65 @@
 import { Locker } from "../models/lockerModel.js";
 
 export const createLockers = async (req, res) => {
-    try {
-        const { storeId, lockers } = req.body;
+  try {
+    const { locationId, lockers } = req.body;
 
-        let created = [];
+    let created = [];
 
-        for (const size in lockers) {
-            const count = lockers[size];
+    for (const size in lockers) {
+      const count = lockers[size];
 
-            const lockersList = await Locker.find({ size, storeId });
+      const lockersList = await Locker.find({ size, locationId });
 
-            let max = 0;
+      let max = 0;
 
-            lockersList.forEach(l => {
-                const num = parseInt(l.code.split("-")[1]);
-                if (num > max) max = num;
-            });
+      lockersList.forEach((l) => {
+        const num = parseInt(l.code.split("-")[1]);
+        if (num > max) max = num;
+      });
 
-            for (let i = 1; i <= count; i++) {
-                created.push({
-                    code: `${size.toUpperCase()}-${max + i}`,
-                    size,
-                    storeId
-                });
-            }
-        }
-
-        await Locker.insertMany(created);
-
-        res.status(201).json({ message: "Lockers created" });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+      for (let i = 1; i <= count; i++) {
+        created.push({
+          code: `${size.toUpperCase()}-${max + i}`,
+          size,
+          locationId,
+          status: "available",
+        });
+      }
     }
+
+    if (created.length === 0) {
+      return res.status(400).json({ message: "No lockers to create" });
+    }
+
+    await Locker.insertMany(created);
+
+    res.status(201).json({
+      message: "Lockers created successfully",
+      count: created.length,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const viewLockers = async (req, res) => {
-    try {
-        const { storeId } = req.params;
+  try {
+    const { locationId } = req.params;
 
-        if (!storeId) {
-            return res.status(400).json({ message: "Store ID is required" });
-        }
-
-        const lockers = await Locker.find({ storeId }).sort({ size: 1, code: 1 });
-
-        res.json({
-            lockers,
-            count: lockers.length
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!locationId) {
+      return res.status(400).json({ message: "Location ID is required" });
     }
+
+    const lockers = await Locker.find({ locationId });
+
+    res.json({
+      lockers,
+      count: lockers.length,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const getAllLockers = async (req, res) => {
@@ -66,34 +72,33 @@ export const getAllLockers = async (req, res) => {
 };
 
 export const updateLockerStatus = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { status } = req.body;
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
 
-        const validStatus = ["available", "occupied", "reserved", "out_of_service"];
+    const validStatus = ["available", "occupied", "reserved", "out_of_service"];
 
-        if (!validStatus.includes(status)) {
-            return res.status(400).json({ message: "Invalid status value" });
-        }
-
-        const locker = await Locker.findByIdAndUpdate(
-            id,
-            { status },
-            { new: true, runValidators: true }
-        );
-
-        if (!locker) {
-            return res.status(404).json({ message: "Locker not found" });
-        }
-
-        res.status(200).json({
-            message: "Locker status updated",
-            locker
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
     }
+
+    const locker = await Locker.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true, runValidators: true },
+    );
+
+    if (!locker) {
+      return res.status(404).json({ message: "Locker not found" });
+    }
+
+    res.status(200).json({
+      message: "Locker status updated",
+      locker,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const deleteLocker = async (req, res) => {
@@ -107,7 +112,7 @@ export const deleteLocker = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Locker deleted successfully"
+      message: "Locker deleted successfully",
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
