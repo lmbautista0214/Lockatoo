@@ -13,28 +13,38 @@ export const LockerGroup = ({
   if (!items?.length) return null;
 
   return (
-    <div>
-      <h3 className="text-md font-semibold text-gray-700 mb-3">
+    <div className="w-full">
+      <h3 className="text-sm font-semibold text-gray-700 mb-3 text-center tracking-wide">
         {size.toUpperCase()} Lockers
       </h3>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-        {[...items]
-          .sort(
-            (a, b) =>
-              Number(a.code.split("-")[1]) - Number(b.code.split("-")[1]),
-          )
-          .map((locker) => (
-            <LockerCard
-              key={locker._id}
-              locker={locker}
-              handleLockerClick={handleLockerClick}
-              dropdownRef={dropdownRef}
-              handleStatusChange={handleStatusChange}
-              handleDeleteLocker={handleDeleteLocker}
-              activeLocker={activeLocker}
-            />
-          ))}
+      <div className="flex justify-center">
+        <div
+          className="
+      grid
+      grid-cols-[repeat(auto-fit,minmax(40px,1fr))]
+      justify-center
+      gap-2
+      max-w-90
+    "
+        >
+          {[...items]
+            .sort(
+              (a, b) =>
+                Number(a.code.split("-")[1]) - Number(b.code.split("-")[1]),
+            )
+            .map((locker) => (
+              <LockerCard
+                key={locker._id}
+                locker={locker}
+                handleLockerClick={handleLockerClick}
+                dropdownRef={dropdownRef}
+                handleStatusChange={handleStatusChange}
+                handleDeleteLocker={handleDeleteLocker}
+                activeLocker={activeLocker}
+              />
+            ))}
+        </div>
       </div>
     </div>
   );
