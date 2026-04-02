@@ -21,17 +21,17 @@ export const register = async (req, res) => {
       return res
         .status(400)
         .json({ message: "Email and password are required" });
-    }
+    };
 
     const lowerCaseEmail = email.toLowerCase();
 
     const exist = await User.findOne({ email: lowerCaseEmail });
 
-    if (exist) return res.status(400).json({ message: "Email already exist!" });
+    if (exist) return res.status(400).json({ message: "Email already exists!" });
 
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Password do not match" });
-    }
+      return res.status(400).json({ message: "Passwords do not match" });
+    };
 
     await User.create({
       name,
@@ -44,7 +44,7 @@ export const register = async (req, res) => {
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
-  }
+  };
 };
 
 export const login = async (req, res) => {
@@ -63,15 +63,22 @@ export const login = async (req, res) => {
 
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
-    }
+    };
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
-    }
+    };
 
     const token = generateToken(user);
+
+    res.cookie("auth_jwt", token, {
+      httpOnly: true,
+      secure: false, //for local devt
+      sameSite: "Lax", //for local devt -- update if deploying?
+      maxAge: 1000 * 60 * 60 * 3
+    });
 
     res.status(200).json({
       message: "Login successful",
