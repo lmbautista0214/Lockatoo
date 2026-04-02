@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import NearbyMap from "../components/NearbyMap";
+import { HeaderNav } from "../components/HeaderNav";
 import axios from "axios";
 
 function NearbyLocationsPage() {
@@ -14,8 +15,11 @@ function NearbyLocationsPage() {
           const lng = pos.coords.longitude;
           setUserCoords({ lat, lng }); // ✅ store user coords
 
+          // ✅ Use Vite env variable
+          const API_URL = import.meta.env.VITE_API_URL;
+
           const res = await axios.get(
-            `http://localhost:1234/api/auth/locations/nearby?lat=${lat}&lng=${lng}&distance=5000`,
+            `${API_URL}/api/locations/nearby?lat=${lat}&lng=${lng}&distance=5000`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -35,9 +39,9 @@ function NearbyLocationsPage() {
 
   return (
     <div>
+      <HeaderNav />
       <h1>Nearby Locations</h1>
-      <NearbyMap locations={locations} userCoords={userCoords} />{" "}
-      {/* ✅ pass userCoords */}
+      <NearbyMap locations={locations} userCoords={userCoords} />
     </div>
   );
 }
