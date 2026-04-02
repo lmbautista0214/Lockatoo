@@ -7,6 +7,8 @@ import sendEmailRoute from "./routes/sendEmailRoute.js";
 import authRoutes from "./routes/authRoutes.js";
 import lockerRoutes from "./routes/lockerRoutes.js";
 import locationRoutes from "./routes/locationRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 dotEnv.config();
@@ -15,14 +17,21 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
+
 app.use(express.json());
+app.use(cookieParser());
 
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/lockers", lockerRoutes);
 app.use("/w1/api/booking/email-confirmation", sendEmailRoute);
+app.use("/api/user", userRoutes)
+
 
 // error handler (always last)
 app.use(errorHandler);

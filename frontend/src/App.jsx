@@ -10,10 +10,15 @@ import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { Dashboard } from "./pages/DashBoard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { EditUserDetails } from "./components/EditUserDetails";
+import { ChangePassword } from "./components/ChangePassword";
+import {UserProfile} from "./components/UserProfile"
+import { ProfileSettings } from "./pages/ProfileSettings";
 
 function App() {
   return (
     <Router>
+      <ProfileSettings />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
