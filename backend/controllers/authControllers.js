@@ -2,9 +2,10 @@ import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { Resend } from "resend";
+// import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// const resend = new Resend(process.env.RESEND_API_KEY);
+import resend from "../configs/emailConfig.js";
 
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
@@ -122,6 +123,7 @@ export const forgotPassword = async (req, res) => {
     await user.save();
 
     const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
+    // const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     await resend.emails.send({
       from: "Lockatoo <onboarding@resend.dev>",

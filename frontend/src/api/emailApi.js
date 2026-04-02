@@ -1,7 +1,8 @@
-const sendEmailConfirmationApi = async (bookingData) => {
+const API_URL = import.meta.env.VITE_API_URL;
 
+const sendBookingEmailApi = async (bookingData) => {
     const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/w1/api/booking/email-confirmation`,
+        `${API_URL}/w1/api/booking/email`,
         {
             method: "POST",
             headers: {
@@ -11,11 +12,9 @@ const sendEmailConfirmationApi = async (bookingData) => {
         }
     );
 
-    if (!response.ok) {
-        throw new Error("Failed to send email");
-    }
+    if (!response.ok) throw new Error("Failed to send email");
 
     return response.json();
 };
 
-export default sendEmailConfirmationApi;
+export default sendBookingEmailApi;

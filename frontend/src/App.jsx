@@ -4,6 +4,8 @@ import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Locker } from "./pages/Locker";
+
+import Pricing from "./pages/Pricing"
 import MockPayment from "./components/MockPayment";
 import NearbyLocationsPage from "./pages/FindLockers";
 import { ForgotPassword } from "./pages/ForgotPassword";
@@ -16,6 +18,8 @@ import {UserProfile} from "./components/UserProfile"
 import { ProfileSettings } from "./pages/ProfileSettings";
 
 function App() {
+  const token = localStorage.getItem("token");
+
   return (
     <Router>
       <ProfileSettings />
@@ -55,6 +59,9 @@ function App() {
           path="/settings"
           element={<div>Settings Page (coming soon)</div>}
         />
+        
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/payment" element={<MockPayment />} />
       </Routes>
     </Router>
   );
