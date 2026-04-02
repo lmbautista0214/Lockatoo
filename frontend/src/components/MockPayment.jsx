@@ -1,6 +1,6 @@
 //mock component for testing purpose only
 
-import sendEmailConfirmationApi from "../api/emailConfirmationApi";
+import sendBookingEmailApi from "../api/emailApi";
 
 const MockPayment = () => {
 
@@ -12,24 +12,22 @@ const MockPayment = () => {
         pickupTime: "06:00 PM"
     };
 
-    const handleSendConfirmationEmail = async () => {
-        try {
-
-            const result = await sendEmailConfirmationApi(mockBooking);
-
-            console.log("Email sent:", result);
-
-        } catch (error) {
-            console.error("Email failed:", error);
-        }
-    };
-
     return (
         <div>
             <h1>Mock Payment</h1>
 
-            <button onClick={handleSendConfirmationEmail}>
+            <button onClick={() => sendBookingEmailApi({
+                ...mockBooking,
+                type: "confirmation"
+            })}>
                 Confirm Payment
+            </button>
+
+            <button onClick={() => sendBookingEmailApi({
+                ...mockBooking,
+                type: "cancelled"
+            })}>
+                Cancel Booking
             </button>
         </div>
     );

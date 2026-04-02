@@ -1,56 +1,55 @@
 import resend from "../configs/emailConfig.js";
-import { emailBody, emailSubject } from "../templates/emailTemplate.js";
-
-const sendEmail = async (data) => {
-    
-    return resend.emails.send({
-        from: "BagDrop <onboarding@resend.dev>",
-        to: data.userEmail,
-        subject: emailSubject,
-        html: emailBody(data)
-    })
-
-};
+import getEmailContent from "../templates/emailTemplate.js";
 
 const sendEmailController = async (req, res) => {
-    try {
+  try {
+    const {
+      type,
+      userEmail,
+      bookingId,
+      location,
+      dropOffTime,
+      pickupTime
+    } = req.body;
 
-        //object keys not yet finalized
-        const {
-            userEmail,
-            bookingId,
-            location,
-            dropOffTime,
-            pickupTime
-        } = req.body;
-
-        if (!userEmail || !bookingId || !location || !dropOffTime || !pickupTime) {
-            return res.status(400).json({
-                message: "Incomplete booking data"
-            });
-        }
-
-        //object keys not yet finalized
-        await sendEmail({
-            userEmail,
-            bookingId,
-            location,
-            dropOffTime,
-            pickupTime
-        });
-
-        res.status(200).json({
-            message: "Email sent successfully",
-            bookingId
-        });
-
-    } catch (error) {
-        console.error(error);
-
-        res.status(500).json({
-            message: "Email failed to send"
-        });
+    if (!type || !userEmail || !bookingId || !location) {
+      return res.status(400).json({
+        message: "Incomplete booking data"
+      });
     }
+
+    if (!["confirmation", "cancelled"].includes(type)) {
+      return res.status(400).json({
+        message: "Invalid email type"
+      });
+    }
+
+    const { subject, html } = getEmailContent(type, {
+      bookingId,
+      location,
+      dropOffTime,
+      pickupTime
+    });
+
+    await resend.emails.send({
+      from: "BagDrop <onboarding@resend.dev>",
+      to: userEmail,
+      subject,
+      html
+    });
+
+    res.status(200).json({
+      message: `${type} email sent successfully`,
+      bookingId
+    });
+
+  } catch (error) {
+    console.error("EMAIL ERROR:", error);
+
+    res.status(500).json({
+      message: error.message || "Email failed to send"
+    });
+  }
 };
 
 export default sendEmailController;

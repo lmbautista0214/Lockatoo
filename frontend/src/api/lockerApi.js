@@ -37,3 +37,20 @@ export const deleteLockerApi = async (id) => {
   });
   return res.json();
 };
+
+export const getLockerSizesByLocation = async (locationId) => {
+  if (!locationId) return [];
+
+  const res = await fetch(
+    `${API_URL}/api/lockers/location/${locationId}/sizes`,
+    {
+      credentials: "include", 
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch locker sizes");
+  }
+
+  return res.json();
+};

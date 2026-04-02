@@ -1,4 +1,5 @@
 import { Locker } from "../models/lockerModel.js";
+import mongoose from "mongoose";
 
 export const createLockers = async (req, res) => {
   try {
@@ -116,5 +117,30 @@ export const deleteLocker = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const getLockerSizesByLocation = async (req, res, next) => {
+  try {
+    const { locationId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(locationId)) {
+      return res.status(400).json({ message: "Invalid location ID" });
+    }
+
+    const lockers = await Locker.find({ locationId: locationId });
+
+    if (!lockers || lockers.length === 0) {
+      return res.json([]);
+    }
+
+    const sizes = [...new Set(lockers.map(l => l.size))];
+
+    res.json(sizes);
+
+  } catch (error) {
+    console.error("LOCKER SIZE ERROR:", error);
+    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
