@@ -1,14 +1,9 @@
-import { useState } from "react";
-import { Header } from "../components/Header";
-import { NavBar } from "../components/NavBar";
+import { HeaderNav } from "../components/HeaderNav";
 
 export const Dashboard = () => {
-  const [navOpen, setNavOpen] = useState(false);
-
   return (
     <>
-      <Header onToggleNav={() => setNavOpen(!navOpen)} navOpen={navOpen} />
-      <NavBar isOpen={navOpen} />
+      <HeaderNav />
       <main className="p-4">{/* Dashboard content */}</main>
     </>
   );
