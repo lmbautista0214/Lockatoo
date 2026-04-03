@@ -116,7 +116,7 @@ export const HeaderNav = () => {
           {/* Find Lockers */}
           <li className="w-full">
             <NavLink
-              to="/lockers"
+              to="/find-lockers"
               className="w-full flex items-center gap-3 px-6 py-3 transition-colors duration-300 group hover:bg-[#FF6B35] hover:text-white"
             >
               <img

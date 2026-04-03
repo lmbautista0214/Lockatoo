@@ -28,7 +28,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/lockers" element={<Locker />} />
-        <Route path="/find-lockers" element={<NearbyLocationsPage />} />
+
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
@@ -38,6 +38,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/find-lockers"
+          element={
+            <ProtectedRoute>
+              <NearbyLocationsPage />
             </ProtectedRoute>
           }
         />
