@@ -5,7 +5,7 @@ import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Locker } from "./pages/Locker";
 
-import Pricing from "./pages/Pricing"
+import Pricing from "./pages/Pricing";
 import MockPayment from "./components/MockPayment";
 import NearbyLocationsPage from "./pages/FindLockers";
 import { ForgotPassword } from "./pages/ForgotPassword";
@@ -14,7 +14,7 @@ import { Dashboard } from "./pages/DashBoard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { EditUserDetails } from "./components/EditUserDetails";
 import { ChangePassword } from "./components/ChangePassword";
-import {UserProfile} from "./components/UserProfile"
+import { UserProfile } from "./components/UserProfile";
 import { ProfileSettings } from "./pages/ProfileSettings";
 
 function App() {
@@ -22,13 +22,11 @@ function App() {
 
   return (
     <Router>
-      <ProfileSettings />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/lockers" element={<Locker />} />
-
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
@@ -50,24 +48,15 @@ function App() {
           }
         />
 
-        {/* Placeholders for teammates */}
         <Route
-          path="/bookings"
-          element={<div>Bookings Page (coming soon)</div>}
+          path="/profile-settings"
+          element={
+            <ProtectedRoute>
+              <ProfileSettings />
+            </ProtectedRoute>
+          }
         />
-        <Route
-          path="/history"
-          element={<div>History Page (coming soon)</div>}
-        />
-        <Route
-          path="/profile"
-          element={<div>Profile Page (coming soon)</div>}
-        />
-        <Route
-          path="/settings"
-          element={<div>Settings Page (coming soon)</div>}
-        />
-        
+
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/payment" element={<MockPayment />} />
       </Routes>

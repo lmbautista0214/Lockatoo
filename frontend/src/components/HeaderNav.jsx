@@ -173,30 +173,10 @@ export const HeaderNav = () => {
             </NavLink>
           </li>
 
-          {/* Profile */}
+          {/* Profile Settings */}
           <li className="w-full">
             <NavLink
-              to="/profile"
-              className="w-full flex items-center gap-3 px-6 py-3 transition-colors duration-300 group hover:bg-[#FF6B35] hover:text-white"
-            >
-              <img
-                src="/src/assets/icons/profile-black.svg"
-                alt="Profile"
-                className="w-5 h-5 group-hover:hidden"
-              />
-              <img
-                src="/src/assets/icons/profile-white.svg"
-                alt="Profile"
-                className="w-5 h-5 hidden group-hover:block"
-              />
-              <span>Profile</span>
-            </NavLink>
-          </li>
-
-          {/* Settings */}
-          <li className="w-full">
-            <NavLink
-              to="/settings"
+              to="/profile-settings"
               className="w-full flex items-center gap-3 px-6 py-3 transition-colors duration-300 group hover:bg-[#FF6B35] hover:text-white"
             >
               <img
@@ -209,7 +189,7 @@ export const HeaderNav = () => {
                 alt="Settings"
                 className="w-5 h-5 hidden group-hover:block"
               />
-              <span>Settings</span>
+              <span>Profile Settings</span>
             </NavLink>
           </li>
 
