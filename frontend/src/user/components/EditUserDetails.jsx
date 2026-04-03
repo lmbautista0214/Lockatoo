@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { useFetch } from "../../hooks/useFetch";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const EditUserDetails = () => {
   //   const { id } = useParams;
@@ -17,6 +17,16 @@ export const EditUserDetails = () => {
     email: "",
     contactNumber: "",
   });
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        name: data.name || "",
+        email: data.email || "",
+        contactNumber: data.contactNumber || "",
+      });
+    }
+  }, [data]);
 
   const handleChange = (event) => {
     setFormData({
@@ -53,35 +63,44 @@ export const EditUserDetails = () => {
   }
 
   return (
-    <>
-      <h1>Edit details</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Name:</label>
-        <input
-          name="name"
-          onChange={handleChange}
-          placeholder={data.name}
-          defaultValue={data.name}
-        />
+    <div className="form-card">
+      <h2 className="form-title">Edit Profile</h2>
 
-        <label>Email:</label>
-        <input
-          name="email"
-          onChange={handleChange}
-          defaultValue={data.email}
-          placeholder={data.email}
-        />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="form-group">
+          <label className="form-label">Name</label>
+          <input
+            name="name"
+            onChange={handleChange}
+            value={formData.name}
+            className="form-input"
+          />
+        </div>
 
-        <label>Contact number:</label>
-        <input
-          name="contactNumber"
-          onChange={handleChange}
-          defaultValue={data.contactNumber}
-          placeholder={data.contactNumber}
-        />
+        <div className="form-group">
+          <label className="form-label">Email</label>
+          <input
+            name="email"
+            onChange={handleChange}
+            value={formData.email}
+            className="form-input"
+          />
+        </div>
 
-        <button>Update</button>
+        <div className="form-group">
+          <label className="form-label">Contact Number</label>
+          <input
+            name="contactNumber"
+            onChange={handleChange}
+            value={formData.contactNumber}
+            className="form-input"
+          />
+        </div>
+
+        <button type="submit" className="btn-main w-full">
+          Update Details
+        </button>
       </form>
-    </>
+    </div>
   );
 };
