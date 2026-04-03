@@ -23,10 +23,11 @@ export const LockerCard = ({
         title={locker.code}
         className={`
           w-10 h-10
-          rounded-lg flex items-center justify-center
+          rounded-xl flex items-center justify-center
           text-white text-[10px] font-semibold
           ${statusStyles[locker.status]}
-          shadow-sm hover:scale-105 active:scale-95 transition
+          shadow-md hover:shadow-lg hover:scale-105 active:scale-95 
+          transition-all duration-200 cursor-pointer
         `}
       >
         {locker.code.split("-")[1]}
@@ -36,7 +37,12 @@ export const LockerCard = ({
         <div
           ref={dropdownRef}
           onClick={(e) => e.stopPropagation()}
-          className="absolute top-full mt-2 bg-white text-gray-700 rounded-xl shadow-xl border p-2 z-20 w-40"
+          className="
+            absolute top-full mt-2 w-44
+            bg-white text-gray-700 
+            rounded-2xl shadow-xl border border-gray-100 
+            p-2 z-20
+          "
         >
           {[
             { label: "Available", value: "available", color: "text-green-600" },
@@ -51,18 +57,26 @@ export const LockerCard = ({
             <div
               key={s.value}
               onClick={() => handleStatusChange(locker, s.value)}
-              className="flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-100 cursor-pointer transition"
+              className="
+                flex justify-between items-center px-3 py-2 text-sm 
+                rounded-xl hover:bg-gray-50 cursor-pointer 
+                transition-all
+              "
             >
               {s.label}
               <span className={`text-xs ${s.color}`}>●</span>
             </div>
           ))}
 
-          <div className="my-1 border-t" />
+          <div className="my-1 border-t border-gray-100" />
 
           <div
             onClick={() => handleDeleteLocker(locker)}
-            className="px-3 py-2 text-sm rounded-lg hover:bg-red-100 text-red-500 font-semibold cursor-pointer transition"
+            className="
+              px-3 py-2 text-sm rounded-xl 
+              hover:bg-red-50 text-red-500 font-semibold 
+              cursor-pointer transition-all
+            "
           >
             Delete
           </div>

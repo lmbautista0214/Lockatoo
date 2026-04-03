@@ -27,7 +27,7 @@ export const FeaturesSection = () => {
   ];
 
   return (
-    <section className="bg-[#f5efe6] py-5 md:py-20 px-4">
+    <section className="home-section">
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
           Why Choose Lockatoo?
@@ -39,15 +39,8 @@ export const FeaturesSection = () => {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl p-6 text-left shadow-md hover:shadow-xl transition"
-            >
-              <div
-                className={`w-12 h-12 flex items-center justify-center rounded-xl text-white text-xl ${f.color}`}
-              >
-                {f.icon}
-              </div>
+            <div key={i} className="feature-card">
+              <div className={`feature-icon ${f.color}`}>{f.icon}</div>
 
               <h3 className="mt-5 text-lg font-semibold text-gray-900">
                 {f.title}

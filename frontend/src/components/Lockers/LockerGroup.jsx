@@ -21,12 +21,13 @@ export const LockerGroup = ({
       <div className="flex justify-center">
         <div
           className="
-      grid
-      grid-cols-[repeat(auto-fit,minmax(40px,1fr))]
-      justify-center
-      gap-2
-      max-w-90
-    "
+            grid
+            grid-cols-[repeat(auto-fit,minmax(40px,1fr))]
+            justify-center
+            gap-2
+            max-w-90
+            relative z-0
+          "
         >
           {[...items]
             .sort(

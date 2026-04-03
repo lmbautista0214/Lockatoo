@@ -182,22 +182,15 @@ export const Locker = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 rounded-2xl shadow-sm border">
-          <select
-            value={locationId}
-            onChange={handleStoreChange}
-            className="border p-2 rounded w-full sm:w-64"
-          >
-            <option value="">Select Location</option>
-            {locations.map((loc) => (
-              <option key={loc._id} value={loc._id}>
-                {loc.locationName}
-              </option>
-            ))}
-          </select>
+          <LockerFilter
+            storeId={locationId}
+            handleStoreChange={handleStoreChange}
+            stores={locations}
+          />
 
           <button
             onClick={() => setShowModal(true)}
-            className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl shadow transition"
+            className="btn-main w-full sm:w-auto"
           >
             + Add Locker
           </button>
