@@ -54,13 +54,26 @@ export const createLocation = async (req, res, next) => {
   }
 };
 
-// READ ALL
+// READ ALL with search + filter
 export const getAllLocations = async (req, res, next) => {
   try {
     let query = {};
+
+    // Restrict attendants to their own locations
     if (req.user.role === "attendant") {
       query.createdBy = req.user.id;
     }
+
+    // Search by locationName (case-insensitive)
+    if (req.query.search) {
+      query.locationName = { $regex: req.query.search, $options: "i" };
+    }
+
+    // Filter by status
+    if (req.query.status) {
+      query.status = req.query.status;
+    }
+
     const locations = await Location.find(query).sort({ createdAt: -1 });
 
     res.status(200).json({
