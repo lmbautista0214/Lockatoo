@@ -38,9 +38,8 @@ export const Locker = () => {
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/api/locations`,
           {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
+            method: "GET",
+            credentials: "include",
           },
         );
         const data = await res.json();

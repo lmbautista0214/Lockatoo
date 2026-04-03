@@ -1,5 +1,6 @@
 import { Locker } from "../models/lockerModel.js";
 import mongoose from "mongoose";
+import {Booking} from "../models/bookingModel.js";
 
 export const createLockers = async (req, res) => {
   try {
@@ -50,7 +51,7 @@ export const viewLockers = async (req, res) => {
 
     if (!locationId) {
       return res.status(400).json({ message: "Location ID is required" });
-    }
+    };
 
     const lockers = await Locker.find({ locationId });
 
@@ -58,9 +59,10 @@ export const viewLockers = async (req, res) => {
       lockers,
       count: lockers.length,
     });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
+  };
 };
 
 export const getAllLockers = async (req, res) => {
@@ -117,6 +119,49 @@ export const deleteLocker = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+
+export const getAvailableLockers = async (req, res) => {
+  try {
+    const { locationId, start_datetime, end_datetime } = req.body;
+
+    if (!locationId || !start_datetime || !end_datetime) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const parsedLocationId = new mongoose.Types.ObjectId(locationId);
+
+    const lockers = await Locker.find({locationId: parsedLocationId});
+
+    const conflictingBookings = await Booking.find({
+      locationId: parsedLocationId,
+      bookingStatus: { $in: ["reserved", "paid"] },
+      $or: [
+        {
+          start_datetime: { $lt: new Date(end_datetime) },
+          end_datetime: { $gt: new Date(start_datetime) },
+        },
+      ],
+    });
+
+    const bookedLockerIds = conflictingBookings
+      .filter(booked => booked.lockerId)
+      .map(booked => booked.lockerId.toString())
+
+    const availableLockers = lockers.filter(
+      (locker) =>
+        locker.status === "available" &&
+        !bookedLockerIds.includes(locker._id.toString())
+    );
+
+    res.json({
+      lockers: availableLockers,
+      count: availableLockers.length,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message});
   }
 };
 

@@ -20,6 +20,7 @@
   },
   "homepage": "https://gitlab.com/uplift-code-camp/students/batch-28/group-project/group3#readme",
   "dependencies": {
+    "@paypal/checkout-server-sdk": "^1.0.3",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.9.0",
     "connect-mongo": "^6.0.0",

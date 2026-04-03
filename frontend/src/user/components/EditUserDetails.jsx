@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useFetch } from "../hooks/useFetch";
+import { useFetch } from "../../hooks/useFetch";
 import { useState } from "react";
 
 export const EditUserDetails = () => {
