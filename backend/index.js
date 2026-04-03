@@ -10,6 +10,8 @@ import locationRoutes from "./routes/locationRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 dotEnv.config();
 
@@ -27,12 +29,11 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/lockers", lockerRoutes);
-app.use("/w1/api/booking/email", sendEmailRoute);
+app.use("/api/booking/email", sendEmailRoute);
 app.use("/api/user", userRoutes)
-app.use("/w1/api/admin/pricing", pricingRoute);
-
-// error handler (always last)
-app.use(errorHandler);
+app.use("/api/admin/pricing", pricingRoute);
+app.use("/api/booking", bookingRoutes);
+app.use("/api/payment", paymentRoutes);
 
 const PORT = process.env.PORT || 1234;
 app.listen(PORT, () => {

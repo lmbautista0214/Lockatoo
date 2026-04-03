@@ -1,13 +1,15 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 const sendBookingEmailApi = async (bookingData) => {
+      console.log("Sending email payload:", bookingData);
     const response = await fetch(
-        `${API_URL}/w1/api/booking/email`,
+        `${API_URL}/api/booking/email`,
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
+            credentials: "include",
             body: JSON.stringify(bookingData)
         }
     );

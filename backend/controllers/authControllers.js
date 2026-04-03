@@ -76,8 +76,8 @@ export const login = async (req, res) => {
 
     res.cookie("auth_jwt", token, {
       httpOnly: true,
-      secure: false, //for local devt
-      sameSite: "Lax", //for local devt -- update if deploying?
+      secure: false,
+      sameSite: "Lax",
       maxAge: 1000 * 60 * 60 * 3
     });
 
@@ -98,6 +98,13 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
+    res.cookie("jwt", "", { 
+    httpOnly: true,
+    expires: new Date(0), 
+    secure: false,
+    sameSite: 'Lax' 
+  });
+
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });

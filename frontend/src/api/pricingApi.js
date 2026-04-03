@@ -15,7 +15,7 @@ const listPricingByLocation = async (locationId) => {
 };
 
 const createPricing = async (data) => {
-    const res = await fetch(`${API_URL}/w1/api/admin/pricing`, {
+    const res = await fetch(`${API_URL}/api/admin/pricing`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

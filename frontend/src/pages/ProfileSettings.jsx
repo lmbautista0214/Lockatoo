@@ -1,5 +1,5 @@
-import { EditUserDetails } from "../components/EditUserDetails";
-import { ChangePassword } from "../components/ChangePassword";
+import { EditUserDetails } from "../user/components/EditUserDetails";
+import { ChangePassword } from "../user/components/ChangePassword";
 
 
 export const ProfileSettings = () => {

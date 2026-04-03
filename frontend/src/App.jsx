@@ -12,16 +12,20 @@ import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { Dashboard } from "./pages/DashBoard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { EditUserDetails } from "./components/EditUserDetails";
-import { ChangePassword } from "./components/ChangePassword";
 import { UserProfile } from "./components/UserProfile";
 import { ProfileSettings } from "./pages/ProfileSettings";
+import { PaymentSuccess } from "./user/components/Payment/PaymentSuccess";
+import { AdminViewBookings } from "./admin/pages/AdminViewBookings";
+import { BookingForm } from "./user/components/BookingForm/BookingForm";
+import { ViewBookings } from "./user/components/ViewBookings";
 
 function App() {
   const token = localStorage.getItem("token");
 
   return (
     <Router>
+      <AdminViewBookings />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -53,6 +57,33 @@ function App() {
           element={
             <ProtectedRoute>
               <ProfileSettings />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/bookings"
+          element={
+            <ProtectedRoute>
+              <BookingForm />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/bookings/view"
+          element={
+            <ProtectedRoute>
+              <ViewBookings />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/bookings/payment-success/:bookingId"
+          element={
+            <ProtectedRoute>
+              <PaymentSuccess />
             </ProtectedRoute>
           }
         />
