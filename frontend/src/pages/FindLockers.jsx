@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
-import { NearbyMap } from "../components/Find-Lockers/NearbyMap";
+// import NearbyMap from "../components/NearbyMap";
 import { HeaderNav } from "../components/HeaderNav";
-import { SearchLocation } from "../components/Find-Lockers/SearchLocation";
-import { LocationCardGrid } from "../components/Find-Lockers/LocationCard";
 import axios from "axios";
 
 function NearbyLocationsPage() {
   const [locations, setLocations] = useState([]);
   const [userCoords, setUserCoords] = useState(null);
-  const [selectedLocationId, setSelectedLocationId] = useState(null);
-
-  // filter states
-  const [search, setSearch] = useState("");
-  const [city, setCity] = useState("");
 
   useEffect(() => {
     async function fetchNearby() {
@@ -20,9 +13,11 @@ function NearbyLocationsPage() {
         navigator.geolocation.getCurrentPosition(async (pos) => {
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
-          setUserCoords({ lat, lng });
+          setUserCoords({ lat, lng }); // ✅ store user coords
 
+          // ✅ Use Vite env variable
           const API_URL = import.meta.env.VITE_API_URL;
+
           const res = await axios.get(
             `${API_URL}/api/locations/nearby?lat=${lat}&lng=${lng}&distance=5000`,
             {
@@ -42,89 +37,11 @@ function NearbyLocationsPage() {
     fetchNearby();
   }, []);
 
-  // derive cities from locations
-  const cities = Array.from(
-    new Set(locations.map((loc) => loc.locationAddress?.city).filter(Boolean)),
-  );
-
-  // filtering logic
-  const filteredLocations = locations.filter((loc) => {
-    const matchesSearch =
-      !search ||
-      loc.locationName.toLowerCase().includes(search.toLowerCase()) ||
-      loc.locationAddress?.street?.toLowerCase().includes(search.toLowerCase());
-
-    const matchesCity = !city || loc.locationAddress?.city === city;
-
-    return matchesSearch && matchesCity;
-  });
-
-  // if pin selected, show only that card
-  const activeLocations = selectedLocationId
-    ? locations.filter((loc) => loc._id === selectedLocationId)
-    : filteredLocations;
-
-  // clear selection when clicking outside
-  useEffect(() => {
-    function handleClickOutside(e) {
-      const mapEl = document.querySelector(".leaflet-container");
-      const cardsEl = document.querySelector(".grid");
-
-      if (
-        mapEl &&
-        !mapEl.contains(e.target) &&
-        cardsEl &&
-        !cardsEl.contains(e.target)
-      ) {
-        setSelectedLocationId(null);
-      }
-    }
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [locations]);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFFBF5] to-[#FFE5D9]">
+    <div>
       <HeaderNav />
-
-      <main className="max-w-6xl mx-auto px-4 py-4">
-        <h1 className="text-2xl font-bold text-[#2A2A2A] mb-3">
-          Nearby Locations
-        </h1>
-
-        {/* Map */}
-        <div className="mb-5">
-          <NearbyMap
-            locations={activeLocations}
-            userCoords={userCoords}
-            onSelectLocation={(id) => {
-              if (!id) {
-                setSelectedLocationId(null);
-              } else {
-                setSelectedLocationId(id);
-              }
-            }}
-          />
-        </div>
-
-        {/* Search Filters */}
-        <div className="mb-5">
-          <SearchLocation
-            search={search}
-            setSearch={setSearch}
-            city={city}
-            setCity={setCity}
-            cities={cities}
-          />
-        </div>
-
-        {/* Cards */}
-        <LocationCardGrid
-          locations={activeLocations}
-          selectedLocationId={selectedLocationId}
-        />
-      </main>
+      <h1>Nearby Locations</h1>
+      <NearbyMap locations={locations} userCoords={userCoords} />
     </div>
   );
 }

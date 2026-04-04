@@ -37,6 +37,8 @@ app.use("/api/admin/pricing", pricingRoute);
 app.use("/api/booking", bookingRoutes);
 app.use("/api/payment", paymentRoutes);
 
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 1234;
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);

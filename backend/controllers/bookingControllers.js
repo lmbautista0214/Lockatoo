@@ -143,4 +143,41 @@ const checkAvailability = async (req,res) => {
     };
 };
 
-export { listBookings, listUserBookings, createBooking, readBooking, updateBooking, deleteBooking, checkAvailability };
+
+const getDashboardStats = async (req, res) => {
+  try {
+    const activeStatuses = ["reserved", "active"];
+
+    const activeBookings = await Booking.countDocuments({
+      bookingStatus: { $in: activeStatuses },
+    });
+
+    const totalBookings = await Booking.countDocuments();
+
+    res.json({
+      activeBookings,
+      totalBookings,
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getRecentBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .populate("locationId", "locationName")
+      .populate("lockerId", "code")
+      .populate("payment")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.json(bookings);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export { listBookings, listUserBookings, createBooking, readBooking, updateBooking, deleteBooking, checkAvailability, getDashboardStats, getRecentBookings };
