@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
-import { Locker } from "./pages/Locker";
+import { Locker } from "./admin/pages/Locker";
+import { Toaster } from "react-hot-toast";
 
 import Pricing from "./pages/Pricing";
 import MockPayment from "./components/MockPayment";
@@ -24,7 +25,8 @@ function App() {
 
   return (
     <Router>
-      <AdminViewBookings />
+      <Toaster position="top-right" />
+      {/* <AdminViewBookings /> */}
 
       <Routes>
         <Route path="/" element={<Home />} />

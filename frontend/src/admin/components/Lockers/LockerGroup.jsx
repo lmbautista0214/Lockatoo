@@ -22,11 +22,11 @@ export const LockerGroup = ({
         <div
           className="
             grid
-            grid-cols-[repeat(auto-fit,minmax(40px,1fr))]
+            grid-cols-[repeat(auto-fit,minmax(40px,auto))]
             justify-center
             gap-2
             max-w-90
-            relative z-0
+            relative
           "
         >
           {[...items]
@@ -39,7 +39,7 @@ export const LockerGroup = ({
                 key={locker._id}
                 locker={locker}
                 handleLockerClick={handleLockerClick}
-                dropdownRef={dropdownRef}
+                // dropdownRef={dropdownRef}
                 handleStatusChange={handleStatusChange}
                 handleDeleteLocker={handleDeleteLocker}
                 activeLocker={activeLocker}

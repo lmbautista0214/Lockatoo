@@ -35,13 +35,16 @@ export const LockerCard = ({
 
       {activeLocker === locker._id && (
         <div
-          ref={dropdownRef}
           onClick={(e) => e.stopPropagation()}
           className="
-            absolute top-full mt-2 w-44
+            locker-dropdown
+            absolute top-full mt-2
+            left-1/2 -translate-x-1/2
+            w-44
             bg-white text-gray-700 
             rounded-2xl shadow-xl border border-gray-100 
-            p-2 z-20
+            p-2
+            z-9999
           "
         >
           {[

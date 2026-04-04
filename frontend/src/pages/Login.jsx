@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -10,6 +11,14 @@ export const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   const inputStyle = (error) =>
     `w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none transition
@@ -65,31 +74,36 @@ export const Login = () => {
     }
 
     try {
-      const res = await fetch(import.meta.env.VITE_API_URL + "/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        import.meta.env.VITE_API_URL + "/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(formData),
         },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+      );
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message);
+        toast.error(data.message);
         return;
       }
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      alert("Login successfully!");
+      toast.success("Login successfully!");
 
-      navigate("/lockers");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
     } catch (error) {
       console.log(error);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
 
