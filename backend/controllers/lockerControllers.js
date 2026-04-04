@@ -189,3 +189,28 @@ export const getLockerSizesByLocation = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getLockerStatusStats = async (req, res) => {
+  try {
+    const lockers = await Locker.find();
+
+    const stats = {
+      available: 0,
+      occupied: 0,
+      reserved: 0,      
+      maintenance: 0,
+    };
+
+    lockers.forEach((l) => {
+      if (l.status === "available") stats.available++;
+      else if (l.status === "occupied") stats.occupied++;
+      else if (l.status === "reserved") stats.reserved++; 
+      else if (l.status === "out_of_service") stats.maintenance++;
+    });
+
+    res.json(stats);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
