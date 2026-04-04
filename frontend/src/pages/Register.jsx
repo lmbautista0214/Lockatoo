@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -80,20 +81,26 @@ export const Register = () => {
     }
 
     try {
-      const res = await fetch(import.meta.env.VITE_API_URL + "/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        import.meta.env.VITE_API_URL + "/api/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+      );
 
       const data = await res.json();
 
-      if (!res.ok) return alert(data.message);
+      if (!res.ok) return toast.error(data.message);
 
-      alert("Registered successfully!");
-      navigate("/login");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      toast.success("Registered successfully!");
+      navigate("/dashboard");
     } catch (error) {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
 

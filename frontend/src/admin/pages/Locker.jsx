@@ -4,11 +4,13 @@ import {
   getLockers,
   updateLockerStatusApi,
   deleteLockerApi,
-} from "../api/lockerApi";
+} from "../../api/lockerApi";
 import { LockerFilter } from "../components/Lockers/LockerFilter";
 import { LockerForm } from "../components/Lockers/LockerForm";
 import { LockerGroup } from "../components/Lockers/LockerGroup";
 import { LockerLegend } from "../components/Lockers/LockerLegend";
+
+import toast from "react-hot-toast";
 
 export const Locker = () => {
   const [locations, setLocations] = useState([]);
@@ -69,7 +71,7 @@ export const Locker = () => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (!e.target.closest(".locker-dropdown")) {
         setActiveLocker(null);
       }
     };
@@ -100,8 +102,11 @@ export const Locker = () => {
       const updated = await getLockers(locationId);
       setLockerList(updated.lockers || []);
       setActiveLocker(null);
+
+      toast.success(`${locker.code} → ${status}`);
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update status");
     }
   };
 
@@ -114,8 +119,10 @@ export const Locker = () => {
       const updated = await getLockers(locationId);
       setLockerList(updated.lockers || []);
       setActiveLocker(null);
+      toast.success(`${locker.code} deleted`);
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete locker");
     }
   };
 
@@ -154,8 +161,11 @@ export const Locker = () => {
       });
 
       setShowModal(false);
+
+      toast.success("Lockers added successfully");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to add lockers");
     } finally {
       setLoading(false);
     }
@@ -196,18 +206,21 @@ export const Locker = () => {
           </button>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl shadow-sm border">
+        <div className="bg-white p-4 rounded-2xl shadow-sm border overflow-visible">
           <h2 className="text-base sm:text-lg font-semibold mb-4">
             Locker Overview
           </h2>
 
           <LockerLegend />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-visible">
             {sizeOrder
               .filter((size) => grouped[size]?.length > 0)
               .map((size) => (
-                <div key={size} className="bg-gray-50 rounded-xl p-2 border">
+                <div
+                  key={size}
+                  className="bg-gray-50 rounded-xl p-2 border overflow-visible relative"
+                >
                   <LockerGroup
                     grouped={grouped}
                     size={size}
