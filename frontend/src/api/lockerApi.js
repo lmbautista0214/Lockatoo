@@ -1,5 +1,3 @@
-import { getLocations } from "./locationApi";
-
 const API_URL = import.meta.env.VITE_API_URL
 
 const getHeaders = () => ({
@@ -55,68 +53,4 @@ export const getLockerSizesByLocation = async (locationId) => {
   }
 
   return res.json();
-};
-
-export const fetchAvailableLockersCount = async () => {
-  try {
-    const locations = await getLocations(); 
-
-    let totalAvailable = 0;
-
-    for (const loc of locations) {
-      const data = await getLockers(loc._id);
-
-      const lockers = data.lockers || data || [];
-
-      const available = lockers.filter(
-        (l) => l.status === "available"
-      ).length;
-
-      totalAvailable += available;
-    }
-
-    return totalAvailable;
-  } catch (err) {
-    console.error("Error fetching available lockers:", err);
-    return 0;
-  }
-};
-export const fetchAdminStats = async () => {
-  try {
-    const locations = await getLocations(); 
-
-    const activeLocationsCount = locations.length;
-
-    let availableLockersCount = 0;
-
-    for (const loc of locations) {
-      const data = await getLockers(loc._id);
-      const lockers = data.lockers || data || [];
-
-      const available = lockers.filter(
-        (l) => l.status === "available"
-      ).length;
-
-      availableLockersCount += available;
-    }
-
-    return {
-      activeLocations: activeLocationsCount,
-      availableLockers: availableLockersCount,
-    };
-  } catch (err) {
-    console.error("Admin stats error:", err);
-    return {
-      activeLocations: 0,
-      availableLockers: 0,
-    };
-  }
-};
-
-export const getLockerStatusStats = async () => {
-  const res = await fetch(`${API_URL}/api/lockers/status-stats`, {
-    credentials: "include",
-  });
-
-  return await res.json();
 };

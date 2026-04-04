@@ -6,8 +6,6 @@ export const useFetch = (url) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!url) return;
-
     const fetchData = async () => {
       try {
         const response = await fetch(url, {
@@ -19,7 +17,6 @@ export const useFetch = (url) => {
         });
 
         const result = await response.json();
-
         setData(result);
 
         if (response.ok) {

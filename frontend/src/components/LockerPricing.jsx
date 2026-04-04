@@ -5,7 +5,6 @@ import {
 } from "../api/pricingApi";
 
 import { getLockerSizesByLocation } from "../api/lockerApi";
-import { getLocations } from "../api/locationApi";
 
 const sizeMap = {
   xs: "Extra Small",
@@ -32,23 +31,37 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
   const [lockerSizes, setLockerSizes] = useState([]);
   const [tempValues, setTempValues] = useState({});
 
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const locationsData = await getLocations();
-
-        setLocations(locationsData);
-
-        if (locationsData.length > 0) {
-          setSelectedLocation(locationsData[0]._id);
+  const fetchLocations = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/locations`,
+        {
+          credentials: "include",
         }
-      } catch (error) {
-        console.error("Error fetching locations:", error);
-      }
-    };
+      );
 
-    fetchLocations();
-  }, []);
+      if (!res.ok) {
+        throw new Error("Failed to fetch locations");
+      }
+
+      const data = await res.json();
+
+      const locationsData = Array.isArray(data.data)
+        ? data.data
+        : Array.isArray(data)
+        ? data
+        : [];
+
+      setLocations(locationsData);
+
+      if (locationsData.length > 0) {
+        setSelectedLocation(locationsData[0]._id);
+      }
+
+    } catch (error) {
+      console.error("Error fetching locations:", error);
+    }
+  };
 
   const fetchLockerSizes = async () => {
     if (!selectedLocation) return;
@@ -97,6 +110,10 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
       console.error("Initialize pricing error:", error);
     }
   };
+
+  useEffect(() => {
+    fetchLocations();
+  }, []);
 
   useEffect(() => {
     if (!selectedLocation) return;

@@ -6,8 +6,7 @@ import {
   deleteLocker,
   getAllLockers,
   getLockerSizesByLocation,
-  getAvailableLockers,
-  getLockerStatusStats
+  getAvailableLockers
 } from "../controllers/lockerControllers.js";
 import { requireRole } from "../middlewares/roleMiddleware.js";
 import { requireAuth } from "../middlewares/authMiddleware.js";
@@ -21,7 +20,6 @@ router.delete("/:id",requireAuth, requireRole("admin"), deleteLocker);
 router.get("/", requireAuth, requireRole("admin", "user"), getAllLockers);
 router.get("/location/:locationId/sizes", requireAuth, requireRole("admin"), getLockerSizesByLocation);
 router.post("/available",requireAuth, requireRole("user"), getAvailableLockers);
-router.get("/status-stats", requireAuth, requireRole("admin"), getLockerStatusStats);
 
 
 export default router;

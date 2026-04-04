@@ -75,35 +75,4 @@ const payer = capture.result.payer;
   }
 };
 
-const getDashboardStatsPayment = async (req, res) => {
-  try {
-    const activeBookings = await Booking.countDocuments({
-      bookingStatus: { $in: ["reserved", "active"] }
-    });
-
-    const totalBookings = await Booking.countDocuments();
-
-    const revenueResult = await Payment.aggregate([
-      { $match: { paymentStatus: "completed" } },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$amount" }
-        }
-      }
-    ]);
-
-    const totalRevenue = revenueResult[0]?.total || 0;
-
-    res.json({
-      activeBookings,
-      totalBookings,
-      totalRevenue,
-    });
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-export { createPayPalOrder, capturePayPalOrder, getDashboardStatsPayment };
+export { createPayPalOrder, capturePayPalOrder };
