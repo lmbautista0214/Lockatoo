@@ -1,16 +1,15 @@
 import { useParams } from "react-router";
 import { useFetch } from "../../hooks/useFetch";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 export const EditUserDetails = () => {
-  //   const { id } = useParams;
-  //sample id for now to see if data is fetched --- to be updated on Friday once routes/links are created
-  let id = "69cddebab4ddda018f8d4c2f";
+  const { userId } = useParams();
   const { data, loading, error } = useFetch(
-    import.meta.env.VITE_API_URL + "/api/user/view/" + id,
+    import.meta.env.VITE_API_URL + "/api/user/view/" + userId,
   );
 
-  const updateEndpoint = import.meta.env.VITE_API_URL + "/api/user/edit/" + id;
+  const updateEndpoint = import.meta.env.VITE_API_URL + "/api/user/edit/" + userId;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -49,6 +48,8 @@ export const EditUserDetails = () => {
 
       const data = await response.json();
       console.log("data", data);
+
+      toast.success("Data updated successfully!");
     } catch (error) {
       console.log("error", error);
     }

@@ -91,9 +91,9 @@ export const Payment = ({ amount, bookingId, locationId }) => {
   }, [isSuccess, navigate]);
 
   return (
-    <div>
-      <h1>Payment gateway</h1>
-
+    
+    <div className="w-full mt-4 flex justify-center">
+      <div className="w-fit">
       <PayPalScriptProvider
         options={{ "client-id": clientId, currency: "PHP" }}
       >
@@ -103,6 +103,7 @@ export const Payment = ({ amount, bookingId, locationId }) => {
           onError={handleError}
         />
       </PayPalScriptProvider>
+    </div>
     </div>
   );
 };
