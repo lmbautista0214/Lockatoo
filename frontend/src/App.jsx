@@ -11,8 +11,8 @@ import MockPayment from "./components/MockPayment";
 import NearbyLocationsPage from "./pages/FindLockers";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
-import { Dashboard } from "./user/pages/DashBoard";
-import { DashboardAdmin } from "./admin/pages/DashBoardAdmin";
+import { Dashboard } from "./user/pages/Dashboard";
+import { DashboardAdmin } from "./admin/pages/DashboardAdmin";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserProfile } from "./components/UserProfile";
 import { ProfileSettings } from "./pages/ProfileSettings";
@@ -36,7 +36,16 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          <Route
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/admin/dashboard"
           element={
             <ProtectedRoute>
@@ -44,8 +53,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        <Route
+<Route
           path="/find-lockers"
           element={
             <ProtectedRoute>
