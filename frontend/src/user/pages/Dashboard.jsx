@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { HeaderNav } from "../../components/HeaderNav";
 import { getCurrentUser } from "../../api/userApi";
-import { fetchBookingStats, fetchActiveBookingsList } from "../../api/bookingApi";
+import {
+  fetchBookingStats,
+  fetchActiveBookingsList,
+} from "../../api/bookingApi";
 import { getLocations } from "../../api/locationApi";
 import { fetchAvailableLockersCount } from "../../api/lockerApi";
 
@@ -95,52 +98,45 @@ export const Dashboard = () => {
         </section>
 
         <section className="flex flex-col gap-7">
-
           {/* Dashboard */}
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
-                <p className="text-gray-600 text-s">
-                  Active Bookings
-                </p>
-                <p className="text-3xl font-bold text-[#165dfc]">{activeBookings}</p>
+              <p className="text-gray-600 text-s">Active Bookings</p>
+              <p className="text-3xl font-bold text-[#165dfc]">
+                {activeBookings}
+              </p>
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
-                <p className="text-gray-600 text-s">
-                  Total Bookings
-                </p>
-                <p className="text-3xl font-bold text-[#00a83d]">{totalBookings}</p>
+              <p className="text-gray-600 text-s">Total Bookings</p>
+              <p className="text-3xl font-bold text-[#00a83d]">
+                {totalBookings}
+              </p>
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
-                <p className="text-gray-600 text-s">
-                  Locations
-                </p>
-                <h1 className="text-3xl font-bold text-[#980dfa]">{locationCount}</h1>
+              <p className="text-gray-600 text-s">Locations</p>
+              <h1 className="text-3xl font-bold text-[#980dfa]">
+                {locationCount}
+              </h1>
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
-                <p className="text-gray-600 text-s">
-                  Available Lockers
-                </p>
-                <p className="text-3xl font-bold text-[#f2501e]">{availableLockers}</p>
+              <p className="text-gray-600 text-s">Available Lockers</p>
+              <p className="text-3xl font-bold text-[#f2501e]">
+                {availableLockers}
+              </p>
             </div>
-            
           </section>
 
           {/* Quick Actions */}
           <section className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
-
             <div className="pb-5">
-              <h6 className="text-s font-bold">
-                Quick Actions
-              </h6>
+              <h6 className="text-s font-bold">Quick Actions</h6>
 
-              <p className="text-gray-600">
-                Common tasks to get you started
-              </p>
+              <p className="text-gray-600">Common tasks to get you started</p>
             </div>
-            
+
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1 bg-[#fffbf5] border border-[#ffeddf] p-2 rounded-2xl hover:bg-[#ffe5d9] transition duration-200 cursor-pointer">
                 <h2 className="text-s font-semibold text-center">
@@ -160,20 +156,14 @@ export const Dashboard = () => {
                 </h2>
               </div>
             </div>
-
           </section>
 
           {/* Active Bookings */}
           <section className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
-
             <div className="pb-5">
-              <h6 className="text-s font-bold">
-                Active Bookings
-              </h6>
+              <h6 className="text-s font-bold">Active Bookings</h6>
 
-              <p className="text-gray-600">
-                Your current locker reservations
-              </p>
+              <p className="text-gray-600">Your current locker reservations</p>
             </div>
 
             {activeBookingsList.length === 0 ? (
@@ -193,25 +183,33 @@ export const Dashboard = () => {
 
                       <p className="text-gray-600 text-sm">
                         Locker: {booking.lockerId?.code || "N/A"} (
-                        {lockerSizeLabels[booking.lockerSize] || booking.lockerSize})
+                        {lockerSizeLabels[booking.lockerSize] ||
+                          booking.lockerSize}
+                        )
                       </p>
 
                       <p className="text-gray-500 text-sm">
-                        {new Date(booking.start_datetime).toLocaleString("en-PH", {
-                          month: "numeric",
-                          day: "numeric",
-                          year: "numeric",
-                          hour: "numeric",
-                          minute: "2-digit",
-                        })}{" to "}
-                        -{" "}
-                        {new Date(booking.end_datetime).toLocaleString("en-PH", {
-                          month: "numeric",
-                          day: "numeric",
-                          year: "numeric",
-                          hour: "numeric",
-                          minute: "2-digit",
-                        })}
+                        {new Date(booking.start_datetime).toLocaleString(
+                          "en-PH",
+                          {
+                            month: "numeric",
+                            day: "numeric",
+                            year: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                          },
+                        )}
+                        {" to "}-{" "}
+                        {new Date(booking.end_datetime).toLocaleString(
+                          "en-PH",
+                          {
+                            month: "numeric",
+                            day: "numeric",
+                            year: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                          },
+                        )}
                       </p>
                     </div>
 
@@ -229,13 +227,8 @@ export const Dashboard = () => {
                 ))}
               </div>
             )}
-            
           </section>
-
         </section>
-
-        
-
       </main>
     </>
   );
