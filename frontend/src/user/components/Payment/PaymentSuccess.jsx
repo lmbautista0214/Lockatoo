@@ -22,28 +22,23 @@ export const PaymentSuccess = () => {
 
         const data = await res.json();
         if (!res.ok) {
-<<<<<<< HEAD
           console.error("Failed to fetch booking:", data);
           return;
         }
-=======
-        console.error("Failed to fetch booking:", data);
-        return;
-}
         const booking = data;
         console.log("booking data", booking);
 
-if (
-        !booking?._id ||
-        !booking?.user?.email ||
-        !booking?.locationId?.locationName
-      ) {
-        console.log("Missing required booking fields", booking);
-        return;
-      };
+        if (
+          !booking?._id ||
+          !booking?.user?.email ||
+          !booking?.locationId?.locationName
+        ) {
+          console.log("Missing required booking fields", booking);
+          return;
+        }
 
         setBookingDetails(booking);
-        
+
         const result = await sendBookingEmailApi({
           userEmail: booking.user.email,
           bookingId: booking._id,
@@ -53,8 +48,7 @@ if (
           type: "confirmation",
         });
 
-          console.log("Email success:", result);
->>>>>>> 4d83774c6d8cebfb2e7fdb066a8d34acf10a8416
+        console.log("Email success:", result);
 
         setBookingDetails(data);
       } catch (err) {
