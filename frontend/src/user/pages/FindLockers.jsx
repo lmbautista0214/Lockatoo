@@ -3,7 +3,6 @@ import { NearbyMap } from "../components/Find-Lockers/NearbyMap";
 import { HeaderNav } from "../../components/HeaderNav";
 import { SearchLocation } from "../components/Find-Lockers/SearchLocation";
 import { LocationCardGrid } from "../components/Find-Lockers/LocationCard";
-import { BookingForm } from "../components/BookingForm/BookingForm";
 import axios from "axios";
 
 export const FindLockers = () => {
@@ -16,31 +15,47 @@ export const FindLockers = () => {
   const [city, setCity] = useState("");
 
   useEffect(() => {
-    async function fetchNearby() {
+    async function fetchLocations(lat = null, lng = null) {
       try {
-        navigator.geolocation.getCurrentPosition(async (pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          setUserCoords({ lat, lng });
+        const API_URL = import.meta.env.VITE_API_URL;
 
-          const API_URL = import.meta.env.VITE_API_URL;
-          const res = await axios.get(
-            `${API_URL}/api/locations/nearby?lat=${lat}&lng=${lng}&distance=50000000000`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            },
-          );
+        // If we have coordinates, call nearby endpoint; else get all locations
+        const url =
+          lat && lng
+            ? `${API_URL}/api/locations/nearby?lat=${lat}&lng=${lng}&distance=50000000000`
+            : `${API_URL}/api/locations`;
 
-          setLocations(res.data.data);
+        const res = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         });
+
+        // Safely set locations as an array
+        setLocations(Array.isArray(res.data.data) ? res.data.data : []);
       } catch (error) {
-        console.error("Error fetching nearby locations:", error);
+        console.error("Error fetching locations:", error);
+        setLocations([]); // fallback to empty array
       }
     }
 
-    fetchNearby();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          setUserCoords({ lat, lng });
+          fetchLocations(lat, lng);
+        },
+        (err) => {
+          console.warn("Geolocation denied or failed:", err);
+          fetchLocations(); // fetch without coords
+        },
+      );
+    } else {
+      // Browser doesn't support geolocation
+      fetchLocations();
+    }
   }, []);
 
   // derive cities from locations
@@ -76,15 +91,9 @@ export const FindLockers = () => {
         {/* Map */}
         <div className="mb-5">
           <NearbyMap
-            locations={activeLocations}
+            locations={Array.isArray(activeLocations) ? activeLocations : []}
             userCoords={userCoords}
-            onSelectLocation={(id) => {
-              if (!id) {
-                setSelectedLocationId(null);
-              } else {
-                setSelectedLocationId(id);
-              }
-            }}
+            onSelectLocation={(id) => setSelectedLocationId(id || null)}
           />
         </div>
 
@@ -101,7 +110,7 @@ export const FindLockers = () => {
 
         {/* Cards */}
         <LocationCardGrid
-          locations={activeLocations}
+          locations={Array.isArray(activeLocations) ? activeLocations : []}
           selectedLocationId={selectedLocationId}
         />
       </main>

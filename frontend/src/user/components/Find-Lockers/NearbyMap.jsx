@@ -39,179 +39,135 @@ const lockerIcon = L.divIcon({
 export const NearbyMap = ({ locations, userCoords, onSelectLocation }) => {
   const navigate = useNavigate();
 
+  // Center map: userCoords if available, else default location
   const center = userCoords
     ? [userCoords.lat, userCoords.lng]
     : [15.186, 120.56];
 
   return (
     <div className="relative z-0 h-[400px] rounded-xl overflow-hidden bg-gradient-to-br from-[#FFFBF5] to-[#FFE5D9] border border-[rgba(253,176,34,0.2)]">
-      {userCoords ? (
-        <MapContainer
-          center={center}
-          zoom={12}
-          zoomControl={false}
-          attributionControl={false}
-          className="h-full w-full"
-        >
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <MapContainer
+        center={center}
+        zoom={12}
+        zoomControl={false}
+        attributionControl={false}
+        className="h-full w-full"
+      >
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-          {/* User Marker */}
+        {/* User Marker only if coords exist */}
+        {userCoords && (
           <Marker position={[userCoords.lat, userCoords.lng]} icon={userIcon} />
+        )}
 
-          {/* Locker Markers */}
-          {locations.map((loc) => (
-            <Marker
-              key={loc._id}
-              position={[
-                loc.locationCoordinates.lat,
-                loc.locationCoordinates.lng,
-              ]}
-              icon={lockerIcon}
-              eventHandlers={{
-                click: () => onSelectLocation?.(loc._id),
-                popupclose: () => onSelectLocation?.(null),
-              }}
-            >
-              <Popup>
-                <div className="w-60 text-sm">
-                  {/* Title */}
-                  <h3 className="font-semibold text-[#2A2A2A] text-base mb-1">
-                    {loc.locationName}
-                  </h3>
+        {/* Locker Markers */}
+        {locations.map((loc) => (
+          <Marker
+            key={loc._id}
+            position={[
+              loc.locationCoordinates.lat,
+              loc.locationCoordinates.lng,
+            ]}
+            icon={lockerIcon}
+            eventHandlers={{
+              click: () => onSelectLocation?.(loc._id),
+              popupclose: () => onSelectLocation?.(null),
+            }}
+          >
+            <Popup>
+              <div className="w-60 text-sm">
+                <h3 className="font-semibold text-[#2A2A2A] text-base mb-1">
+                  {loc.locationName}
+                </h3>
 
-                  {/* Address */}
-                  {loc.locationAddress?.street && (
-                    <p className="text-gray-600 text-xs">
-                      {loc.locationAddress.street}
-                    </p>
-                  )}
-                  {loc.locationAddress?.city && (
-                    <p className="text-gray-600 text-xs mb-2">
-                      {loc.locationAddress.city}, {loc.locationAddress.province}
-                    </p>
-                  )}
+                {loc.locationAddress?.street && (
+                  <p className="text-gray-600 text-xs">
+                    {loc.locationAddress.street}
+                  </p>
+                )}
+                {loc.locationAddress?.city && (
+                  <p className="text-gray-600 text-xs mb-2">
+                    {loc.locationAddress.city}, {loc.locationAddress.province}
+                  </p>
+                )}
 
-                  {/* Image */}
-                  {loc.image ? (
-                    <img
-                      src={loc.image}
-                      alt={loc.locationName}
-                      className="w-full h-28 object-cover rounded-md mb-2 border border-gray-200"
-                    />
-                  ) : (
-                    <p className="text-xs text-gray-500 mb-2">
-                      No image available
-                    </p>
-                  )}
+                {loc.image ? (
+                  <img
+                    src={loc.image}
+                    alt={loc.locationName}
+                    className="w-full h-28 object-cover rounded-md mb-2 border border-gray-200"
+                  />
+                ) : (
+                  <p className="text-xs text-gray-500 mb-2">
+                    No image available
+                  </p>
+                )}
 
-                  {/* Operating Hours */}
-                  {loc.operatingHours?.open && loc.operatingHours?.close && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 text-[#FDB022]"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                      </svg>
-                      <span>
-                        {loc.operatingHours.open} – {loc.operatingHours.close}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Buttons */}
-                  <div className="flex gap-2">
-                    {/* Book Now */}
-                    <button
-                      onClick={() => navigate(`/bookings/${loc._id}`)}
-                      className="group flex-1 h-9 rounded-lg text-xs font-semibold
-                                 flex items-center justify-center gap-1
-                                 text-white
-                                 bg-gradient-to-r from-[#FDB022] via-[#f59e0b] to-[#fbbf24]
-                                 shadow-sm transition-all duration-300
-                                 hover:shadow-md hover:-translate-y-[1px]
-                                 active:translate-y-0 active:shadow-sm
-                                 cursor-pointer"
+                {loc.operatingHours?.open && loc.operatingHours?.close && (
+                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-4 h-4 text-[#FDB022]"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M6 3h12l-1 18H7L6 3z" />
-                        <path d="M9 3V1h6v2" />
-                      </svg>
-                      <span>Book</span>
-                    </button>
-
-                    {/* Directions */}
-                    <button
-                      onClick={() =>
-                        window.open(
-                          `https://www.google.com/maps?q=${loc.locationCoordinates.lat},${loc.locationCoordinates.lng}`,
-                          "_blank",
-                        )
-                      }
-                      className="group flex-1 h-9 rounded-lg text-xs font-medium
-                                 flex items-center justify-center gap-1
-                                 bg-white/70 backdrop-blur-md
-                                 border border-[rgba(253,176,34,0.3)]
-                                 text-[#2A2A2A]
-                                 shadow-sm transition-all duration-200
-                                 hover:shadow-md hover:-translate-y-[1px]
-                                 hover:bg-[#FDB022] hover:text-white
-                                 active:translate-y-0 active:shadow-sm
-                                 cursor-pointer"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-12"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                      </svg>
-                      <span>Directions</span>
-                    </button>
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>
+                      {loc.operatingHours.open} – {loc.operatingHours.close}
+                    </span>
                   </div>
+                )}
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => navigate(`/bookings/${loc._id}`)}
+                    className="group flex-1 h-9 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 text-white bg-gradient-to-r from-[#FDB022] via-[#f59e0b] to-[#fbbf24] shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-[1px] active:translate-y-0 active:shadow-sm cursor-pointer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M6 3h12l-1 18H7L6 3z" />
+                      <path d="M9 3V1h6v2" />
+                    </svg>
+                    <span>Book</span>
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      window.open(
+                        `https://www.google.com/maps?q=${loc.locationCoordinates.lat},${loc.locationCoordinates.lng}`,
+                        "_blank",
+                      )
+                    }
+                    className="group flex-1 h-9 rounded-lg text-xs font-medium flex items-center justify-center gap-1 bg-white/70 backdrop-blur-md border border-[rgba(253,176,34,0.3)] text-[#2A2A2A] shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-[1px] hover:bg-[#FDB022] hover:text-white active:translate-y-0 active:shadow-sm cursor-pointer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-12"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                    </svg>
+                    <span>Directions</span>
+                  </button>
                 </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      ) : (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-16 h-16 mx-auto mb-4"
-              fill="none"
-              stroke="#FDB022"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-            <h3 className="text-xl font-semibold text-[#2A2A2A] mb-2">
-              Interactive Map
-            </h3>
-            <p className="text-[#6B6B6B] max-w-md mx-auto">
-              Click markers to view locker details and book instantly.
-            </p>
-          </div>
-        </div>
-      )}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
     </div>
   );
 };
