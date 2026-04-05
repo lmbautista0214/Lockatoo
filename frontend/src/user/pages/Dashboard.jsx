@@ -150,7 +150,7 @@ export const Dashboard = () => {
               </div>
 
               <div
-                onClick={() => navigate("/bookings/view")}
+                onClick={() => navigate("/bookings")}
                 className="flex-1 bg-[#fffbf5] border border-[#ffeddf] p-2 rounded-2xl hover:bg-[#ffe5d9] transition duration-200 cursor-pointer"
               >
                 <h2 className="text-s font-semibold text-center">

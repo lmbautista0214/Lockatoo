@@ -40,7 +40,7 @@ export const HeaderNav = () => {
   const navItems = [
     { name: "Dashboard", to: "/dashboard", icon: "dashboard" },
     { name: "Find Lockers", to: "/find-lockers", icon: "location-pin" },
-    { name: "My Bookings", to: "/bookings/view", icon: "booking" },
+    { name: "My Bookings", to: "/bookings", icon: "booking" },
     // { name: "Booking History", to: "/history", icon: "history" },
     { name: "Profile Settings", to: "/profile-settings", icon: "settings" },
   ];
