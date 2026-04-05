@@ -42,7 +42,7 @@ export const HeaderNav = () => {
     { name: "Find Lockers", to: "/find-lockers", icon: "location-pin" },
     { name: "My Bookings", to: "/bookings", icon: "booking" },
     // { name: "Booking History", to: "/history", icon: "history" },
-    { name: "Profile Settings", to: "/profile-settings", icon: "settings" },
+    { name: "Profile Settings", to: `/profile-settings/${user?._id}`, icon: "settings" },
   ];
 
   return (
