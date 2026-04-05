@@ -16,15 +16,10 @@ export const AdminHeaderNav = () => {
 
   const navItems = [
     { name: "Dashboard", to: "/admin/dashboard", icon: "dashboard" },
-
-    // check this route exists
     { name: "Manage Bookings", to: "/admin/bookings", icon: "booking" },
-
-    // this should go to lockers page
     { name: "Manage Lockers", to: "/lockers", icon: "location-pin" },
-
-    // pricing / rates page (if you have it)
     { name: "Manage Rates", to: "/pricing", icon: "locker" },
+
     // { name: "Rates", to: "/admin/rates", icon: "rates" },
     // {
     //   name: "Profile Settings",
@@ -39,17 +34,17 @@ export const AdminHeaderNav = () => {
       <header
         ref={headerRef}
         className="sticky top-0 z-[1000] px-4 md:px-6 py-4 flex items-center justify-between
-                   bg-gradient-to-r from-[#8b5cf6] via-[#a78bfa] to-[#c4b5fd] shadow-sm"
+                   bg-gradient-to-r from-[#FFF8EF] to-[#FFE5D9] shadow-sm"
       >
         {/* Logo */}
         <a
           href="/admin/dashboard"
           className="flex items-center gap-3 transform transition hover:scale-105"
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#8b5cf6] to-[#c4b5fd] rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#ff7e5f] to-[#ffb88c] rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-white"
+              className="w-6 h-6 text-gray-700"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -61,7 +56,7 @@ export const AdminHeaderNav = () => {
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
           </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-[#ffffff] to-[#f3f4f6] bg-clip-text text-transparent">
+          <span className="text-2xl font-bold bg-gradient-to-r from-[#ff7e5f] to-[#ff9966] bg-clip-text text-transparent">
             Admin Panel
           </span>
         </a>
@@ -69,20 +64,20 @@ export const AdminHeaderNav = () => {
         {/* Hamburger */}
         <button
           onClick={toggleNav}
-          className="flex flex-col justify-center items-center w-10 h-10 rounded-lg focus:outline-none"
+          className="cursor-pointer flex flex-col justify-center items-center w-10 h-10 rounded-lg focus:outline-none"
         >
           <span
-            className={`block w-6 h-0.5 bg-white transform transition duration-300 ${
+            className={`block w-6 h-0.5 bg-gray-700 transform transition duration-300 ${
               navOpen ? "rotate-45 translate-y-1.5" : ""
             }`}
           />
           <span
-            className={`block w-6 h-0.5 bg-white my-1 transition duration-300 ${
+            className={`block w-6 h-0.5 bg-gray-700 my-1 transition duration-300 ${
               navOpen ? "opacity-0" : ""
             }`}
           />
           <span
-            className={`block w-6 h-0.5 bg-white transform transition duration-300 ${
+            className={`block w-6 h-0.5 bg-gray-700 transform transition duration-300 ${
               navOpen ? "-rotate-45 -translate-y-1.5" : ""
             }`}
           />
@@ -92,26 +87,26 @@ export const AdminHeaderNav = () => {
       {/* Nav Menu */}
       <nav
         style={{ top: navTop }}
-        className={`fixed left-0 w-full bg-gradient-to-r from-[#8b5cf6] via-[#a78bfa] to-[#c4b5fd] shadow-md z-[1000] transition-[max-height] duration-500 ease-in-out overflow-hidden ${
+        className={`fixed left-0 w-full bg-gradient-to-r from-[#FFF8EF] to-[#FFE5D9] shadow-md z-[1000] transition-[max-height] duration-500 ease-in-out overflow-hidden ${
           navOpen ? "max-h-screen" : "max-h-0"
         }`}
       >
-        <ul className="flex flex-col items-start gap-2 px-0 py-6 text-sm sm:text-base md:text-lg font-medium text-white">
+        <ul className="flex flex-col items-start gap-2 px-0 py-6 text-sm sm:text-base md:text-lg font-medium text-gray">
           {navItems.map((item) => (
             <li key={item.name} className="w-full">
               <NavLink
                 to={item.to}
-                className="w-full flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-300 hover:bg-white hover:text-[#8b5cf6] group"
+                className="w-full flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#FF6B35] hover:text-white group"
               >
+                <img
+                  src={`/src/assets/icons/${item.icon}-black.svg`}
+                  alt={item.name}
+                  className="w-5 h-5 group-hover:hidden"
+                />
                 <img
                   src={`/src/assets/icons/${item.icon}-white.svg`}
                   alt={item.name}
-                  className="w-5 h-5 transition-all duration-300 group-hover:hidden"
-                />
-                <img
-                  src={`/src/assets/icons/${item.icon}-purple.svg`}
-                  alt={item.name}
-                  className="w-5 h-5 hidden transition-all duration-300 group-hover:block"
+                  className="w-5 h-5 hidden group-hover:block"
                 />
                 <span className="transition-all duration-300 group-hover:scale-110 group-hover:ml-2">
                   {item.name}

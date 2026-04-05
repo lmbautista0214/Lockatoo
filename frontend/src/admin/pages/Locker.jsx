@@ -181,7 +181,7 @@ export const Locker = () => {
   const sizeOrder = ["xs", "s", "m", "l", "xl", "xxl"];
 
   return (
-    <div className="min-h-screen bg-amber-50">
+    <div className="min-h-screen bg-linear-to-r bg-linear-to-br from-[#fff4ed] via-[#ffe8d9] to-[#fffaf5]">
       <AdminHeaderNav />
       <div className="max-w-5xl mx-auto p-4 sm:p-6 space-y-6">
         <div>

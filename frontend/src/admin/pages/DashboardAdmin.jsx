@@ -120,7 +120,7 @@ export const DashboardAdmin = () => {
   return (
     <>
       <AdminHeaderNav />
-      <main className="p-7 min-h-screen bg-gradient-to-r from-[#f9f3ff] to-[#e7d6ff]">
+      <main className="p-7 min-h-screen bg-linear-to-r from-[#fff4ed] to-[#ffe3d3]">
         {/* Welcome Message*/}
         <section className="mb-6">
           <h1 className="text-2xl font-bold">Admin Dashboard</h1>
@@ -135,21 +135,21 @@ export const DashboardAdmin = () => {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
               <p className="text-gray-600 text-s">Total Active Locations</p>
-              <p className="text-3xl font-bold text-[#165dfc]">
+              <p className="text-3xl font-bold text-[#ff7e5f]">
                 {activeLocations}
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
               <p className="text-gray-600 text-s">Total Available Lockers</p>
-              <p className="text-3xl font-bold text-[#00a83d]">
+              <p className="text-3xl font-bold text-[#ff7e5f]">
                 {availableLockers}
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-[#ffeddf]">
               <p className="text-gray-600 text-s">Total Active Bookings</p>
-              <h1 className="text-3xl font-bold text-[#980dfa]">
+              <h1 className="text-3xl font-bold text-[#ff7e5f]">
                 {stats?.activeBookings ?? 0}
               </h1>
             </div>
@@ -243,7 +243,7 @@ export const DashboardAdmin = () => {
 
                       <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
                         <div
-                          className="bg-[#5b3df5] h-3 rounded-full"
+                          className="bg-[#ff7e5f] h-3 rounded-full"
                           style={{ width: `${percent}%` }}
                         ></div>
                       </div>
@@ -301,7 +301,7 @@ export const DashboardAdmin = () => {
 
                     {/* RIGHT */}
                     <div className="text-right">
-                      <p className="text-[#165dfc] font-bold text-lg">
+                      <p className="text-[#ff7e5f] font-bold text-lg">
                         ₱ {(b.payment?.amount ?? 0).toLocaleString()}
                       </p>
                       <p

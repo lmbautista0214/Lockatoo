@@ -38,7 +38,7 @@ const Pricing = () => {
   return (
     <>
       <AdminHeaderNav />
-      <div className="p-7 min-h-screen bg-gradient-to-r from-[#f9f3ff] to-[#e7d6ff]">
+      <div className="p-7 min-h-screen bg-gradient-to-br from-[#fff4ed] via-[#ffe8d9] to-[#fffaf5]">
         <div className="mb-7">
           <h1 className="text-2xl font-bold">Pricing & Rates</h1>
           <p className="text-gray-600">
