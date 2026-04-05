@@ -48,11 +48,19 @@ function App() {
           path="/admin/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <DashboardAdmin />
             </ProtectedRoute>
           }
         />
-<Route
+        <Route
+          path="/admin/bookings"
+          element={
+            <ProtectedRoute>
+              <AdminViewBookings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/find-lockers"
           element={
             <ProtectedRoute>

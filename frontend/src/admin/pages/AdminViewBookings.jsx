@@ -54,12 +54,12 @@ export const AdminViewBookings = () => {
   const totalCount = bookings.length;
 
   const statusStyles = {
-  active: "bg-green-100 text-green-700",
-  completed: "bg-blue-100 text-blue-700",
-  cancelled: "bg-red-100 text-red-700",
-  reserved: "bg-yellow-100 text-yellow-700",
-  paid: "bg-orange-100 text-orange-700"
-};
+    active: "bg-green-100 text-green-700",
+    completed: "bg-blue-100 text-blue-700",
+    cancelled: "bg-red-100 text-red-700",
+    reserved: "bg-yellow-100 text-yellow-700",
+    paid: "bg-orange-100 text-orange-700",
+  };
 
   if (loading) return <div>Loading bookings...</div>;
   if (error) return <div>Error loading bookings</div>;
@@ -69,19 +69,28 @@ export const AdminViewBookings = () => {
       <HeaderNav />
       <h2 className="getstarted-title my-2 mt-4">All transactions</h2>
 
-    <div className="flex">
-      <div className="feature-card my-2 mr-2 w-2/3 sm:w-100"> 
-        <p className="how-title text-xl">Active bookings: <span className="text-green-700">{activeCount}</span></p>
-      </div>
+      <div className="flex">
+        <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
+          <p className="how-title text-xl">
+            Active bookings:{" "}
+            <span className="text-green-700">{activeCount}</span>
+          </p>
+        </div>
 
-      <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
-        <p className="how-title text-xl">Reserved bookings: <span className="text-yellow-700">{reservedCount}</span></p>
-      </div>
+        <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
+          <p className="how-title text-xl">
+            Reserved bookings:{" "}
+            <span className="text-yellow-700">{reservedCount}</span>
+          </p>
+        </div>
 
-      <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
-        <p className="how-title text-xl"> Total bookings: <span className="text-violet-700">{totalCount}</span></p>
-      </div>
-
+        <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
+          <p className="how-title text-xl">
+            {" "}
+            Total bookings:{" "}
+            <span className="text-violet-700">{totalCount}</span>
+          </p>
+        </div>
       </div>
 
       <div className="feature-card my-2">
@@ -119,19 +128,28 @@ export const AdminViewBookings = () => {
           <p>No bookings match the selected filters.</p>
         ) : (
           filteredBookings.map((b) => (
-            <div
-              key={b._id}
-              className="form-card bg-white/60"
-            >
-              <div className="flex items-end gap-3"> 
-                <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                statusStyles[b.bookingStatus] || "bg-gray-100 text-gray-700"
-                }`}>{b.bookingStatus}</div>
+            <div key={b._id} className="form-card bg-white/60">
+              <div className="flex items-end gap-3">
+                <div
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    statusStyles[b.bookingStatus] || "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {b.bookingStatus}
+                </div>
               </div>
-              <div className="booking-content"><b>Location:</b> {b.locationId?.locationName || "Unknown"}</div>
-              <div className="booking-content"><b>Locker:</b> {b.lockerId?.code || "Unknown"}</div>
-              <div className="booking-content"><b>Start:</b> {new Date(b.start_datetime).toLocaleString()}</div>
-              <div className="booking-content"><b>End:</b> {new Date(b.end_datetime).toLocaleString()}</div>
+              <div className="booking-content">
+                <b>Location:</b> {b.locationId?.locationName || "Unknown"}
+              </div>
+              <div className="booking-content">
+                <b>Locker:</b> {b.lockerId?.code || "Unknown"}
+              </div>
+              <div className="booking-content">
+                <b>Start:</b> {new Date(b.start_datetime).toLocaleString()}
+              </div>
+              <div className="booking-content">
+                <b>End:</b> {new Date(b.end_datetime).toLocaleString()}
+              </div>
 
               {b.bookingStatus === "reserved" && (
                 <CancelBooking

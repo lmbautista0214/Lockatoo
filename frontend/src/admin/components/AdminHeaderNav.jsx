@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { LogoutButton } from "./LogoutButton";
+import { LogoutButton } from "../../components/LogoutButton";
 
 export const AdminHeaderNav = () => {
   const [navOpen, setNavOpen] = useState(false);
@@ -16,15 +16,21 @@ export const AdminHeaderNav = () => {
 
   const navItems = [
     { name: "Dashboard", to: "/admin/dashboard", icon: "dashboard" },
-    { name: "Bookings", to: "/admin/bookings", icon: "booking" },
-    { name: "Locations", to: "/admin/locations", icon: "location-pin" },
-    { name: "Lockers", to: "/admin/lockers", icon: "locker" },
-    { name: "Rates", to: "/admin/rates", icon: "rates" },
-    {
-      name: "Profile Settings",
-      to: "/admin/profile-settings",
-      icon: "settings",
-    },
+
+    // check this route exists
+    { name: "Manage Bookings", to: "/admin/bookings", icon: "booking" },
+
+    // this should go to lockers page
+    { name: "Manage Lockers", to: "/lockers", icon: "location-pin" },
+
+    // pricing / rates page (if you have it)
+    { name: "Manage Rates", to: "/pricing", icon: "locker" },
+    // { name: "Rates", to: "/admin/rates", icon: "rates" },
+    // {
+    //   name: "Profile Settings",
+    //   to: "/admin/profile-settings",
+    //   icon: "settings",
+    // },
   ];
 
   return (

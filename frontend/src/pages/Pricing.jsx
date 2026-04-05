@@ -3,9 +3,9 @@ import LockerPricing from "../components/LockerPricing";
 import RateComparison from "../components/RateComparison";
 import PricingGuidelines from "../components/PricingGuidelines";
 import { listPricingByLocation } from "../api/pricingApi";
+import { AdminHeaderNav } from "../admin/components/AdminHeaderNav";
 
 const Pricing = () => {
-
   const [pricing, setPricing] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [pricingLoading, setPricingLoading] = useState(false);
@@ -23,7 +23,7 @@ const Pricing = () => {
       setPricingLoading(false);
     }
   };
-  
+
   useEffect(() => {
     if (!selectedLocation) return;
 
@@ -37,14 +37,16 @@ const Pricing = () => {
 
   return (
     <>
+      <AdminHeaderNav />
       <div className="p-7 min-h-screen bg-gradient-to-r from-[#f9f3ff] to-[#e7d6ff]">
         <div className="mb-7">
           <h1 className="text-2xl font-bold">Pricing & Rates</h1>
-          <p className="text-gray-600">Manage rental rates for different locker sizes</p>
+          <p className="text-gray-600">
+            Manage rental rates for different locker sizes
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6">
-
           <LockerPricing
             pricing={pricing}
             refresh={fetchPricing}
@@ -56,7 +58,6 @@ const Pricing = () => {
           <RateComparison pricing={pricing} />
 
           <PricingGuidelines />
-
         </div>
       </div>
     </>
