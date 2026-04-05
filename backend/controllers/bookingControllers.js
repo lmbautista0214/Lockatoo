@@ -262,7 +262,7 @@ const cancelBooking = async (req, res) => {
       bookingId,
       { bookingStatus: "cancelled" },
       { new: true }
-    ).populate("locationId user");
+    ).populate("locationId user lockerId");
 
     if (!booking) throw new Error("Booking not found");
 

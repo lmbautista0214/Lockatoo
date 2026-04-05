@@ -9,7 +9,7 @@ import { requireAuth } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 router.post("/create-order", createPayPalOrder);
-router.post("/capture-order", capturePayPalOrder);
+router.post("/capture-order", requireAuth, capturePayPalOrder);
 router.get("/dashboard", requireAuth, getDashboardStatsPayment);
 
 export default router;
