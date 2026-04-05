@@ -8,6 +8,7 @@ import {
 import { getLocations } from "../../api/locationApi";
 import { fetchAvailableLockersCount } from "../../api/lockerApi";
 
+import { useNavigate } from "react-router-dom";
 const lockerSizeLabels = {
   xs: "Extra Small",
   s: "Small",
@@ -25,6 +26,7 @@ export const Dashboard = () => {
   const [activeBookingsList, setActiveBookingsList] = useState([]);
   const [locationCount, setLocationCount] = useState(0);
   const [availableLockers, setAvailableLockers] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -138,21 +140,30 @@ export const Dashboard = () => {
             </div>
 
             <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1 bg-[#fffbf5] border border-[#ffeddf] p-2 rounded-2xl hover:bg-[#ffe5d9] transition duration-200 cursor-pointer">
+              <div
+                onClick={() => navigate("/find-lockers")}
+                className="flex-1 bg-[#fffbf5] border border-[#ffeddf] p-2 rounded-2xl hover:bg-[#ffe5d9] transition duration-200 cursor-pointer"
+              >
                 <h2 className="text-s font-semibold text-center">
                   Find Lockers
                 </h2>
               </div>
 
-              <div className="flex-1 bg-[#fffbf5] border border-[#ffeddf] p-2 rounded-2xl hover:bg-[#ffe5d9] transition duration-200 cursor-pointer">
+              <div
+                onClick={() => navigate("/bookings/view")}
+                className="flex-1 bg-[#fffbf5] border border-[#ffeddf] p-2 rounded-2xl hover:bg-[#ffe5d9] transition duration-200 cursor-pointer"
+              >
                 <h2 className="text-s font-semibold text-center">
                   My Bookings
                 </h2>
               </div>
 
-              <div className="flex-1 bg-[#fffbf5] border border-[#ffeddf] p-2 rounded-2xl hover:bg-[#ffe5d9] transition duration-200 cursor-pointer">
+              <div
+                onClick={() => navigate("/profile-settings")}
+                className="flex-1 bg-[#fffbf5] border border-[#ffeddf] p-2 rounded-2xl hover:bg-[#ffe5d9] transition duration-200 cursor-pointer"
+              >
                 <h2 className="text-s font-semibold text-center">
-                  Booking History
+                  Profile Settings
                 </h2>
               </div>
             </div>
@@ -216,7 +227,7 @@ export const Dashboard = () => {
                     {/* RIGHT */}
                     <div className="text-right">
                       <p className="text-[#165dfc] font-bold text-lg">
-                        ${booking.payment?.amount || 0}
+                        ₱{booking.payment?.amount || 0}
                       </p>
 
                       <p className="text-[#00a83d] text-sm">

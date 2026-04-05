@@ -11,6 +11,7 @@ import { LockerGroup } from "../components/Lockers/LockerGroup";
 import { LockerLegend } from "../components/Lockers/LockerLegend";
 
 import toast from "react-hot-toast";
+import { AdminHeaderNav } from "../components/AdminHeaderNav";
 
 export const Locker = () => {
   const [locations, setLocations] = useState([]);
@@ -181,6 +182,7 @@ export const Locker = () => {
 
   return (
     <div className="min-h-screen bg-amber-50">
+      <AdminHeaderNav />
       <div className="max-w-5xl mx-auto p-4 sm:p-6 space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
