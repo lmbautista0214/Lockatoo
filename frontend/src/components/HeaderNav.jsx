@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { LogoutButton } from "./LogoutButton";
+import lockatooLogo from "../assets/icons/lockatoo.png";
 
 export const HeaderNav = () => {
   const [user, setUser] = useState(null);
@@ -57,21 +58,12 @@ export const HeaderNav = () => {
           href="/dashboard"
           className="flex items-center gap-3 transform transition hover:scale-105"
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#FDB022] to-[#FF6B35] rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-white"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              viewBox="0 0 24 24"
-            >
-              <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-          </div>
+          {/* Logo without background */}
+          <img
+            src={lockatooLogo}
+            alt="Lockatoo Logo"
+            className="w-12 h-12 object-contain"
+          />
           <span className="text-2xl font-bold bg-gradient-to-r from-[#FDB022] to-[#FF6B35] bg-clip-text text-transparent">
             Lockatoo
           </span>
