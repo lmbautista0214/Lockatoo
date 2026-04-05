@@ -8,6 +8,7 @@ import {
   createLocation,
   getAllLocations,
   getLocationById,
+  fetchAdminStats,
   updateLocation,
   deleteLocation,
   getNearbyLocations,
@@ -35,6 +36,8 @@ router.get(
   requireRole("admin", "attendant", "user"),
   getNearbyLocations,
 );
+
+router.get("/stats", requireAuth, requireRole("admin"), fetchAdminStats);
 
 // Read single location → allowed for all roles
 router.get(

@@ -1,5 +1,6 @@
 import Location from "../models/locationModel.js";
 import cloudinary from "../configs/cloudinary.js";
+import { Locker } from "../models/lockerModel.js";
 
 // CREATE
 export const createLocation = async (req, res, next) => {
@@ -230,5 +231,30 @@ export const getNearbyLocations = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export const fetchAdminStats = async (req, res) => {
+  try {
+    const adminId = req.user.id;
+
+    const locations = await Location.find({
+      createdBy: adminId,
+      status: "ACTIVE",
+    });
+
+    const locationIds = locations.map((loc) => loc._id);
+
+    const availableLockers = await Locker.find({
+      locationId: { $in: locationIds },
+      status: "available",
+    });
+
+    res.json({
+      activeLocations: locations.length,
+      availableLockers: availableLockers.length,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
