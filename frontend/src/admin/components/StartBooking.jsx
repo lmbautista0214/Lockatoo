@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const StartBooking = ({ bookingId }) => {
+export const StartBooking = ({ bookingId, onSuccess }) => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -19,6 +19,7 @@ export const StartBooking = ({ bookingId }) => {
       });
 
       const data = await response.json();
+      if (onSuccess) onSuccess(bookingId);
 
       setShowModal(false);
     } catch (error) {
@@ -29,6 +30,7 @@ export const StartBooking = ({ bookingId }) => {
   return (
     <>
       <button
+      className="getstarted-btn bg-blue-50 text-blue-950"
         onClick={() => {
           setShowModal(true);
         }}
@@ -48,7 +50,7 @@ export const StartBooking = ({ bookingId }) => {
               <button
                 onClick={() => setShowModal(false)}
                 disabled={loading}
-                className="px-3 py-1 border rounded hover:bg-gray-100"
+                className="px-3 py-1 border rounded hover:bg-gray-100" 
               >
                 No
               </button>

@@ -10,23 +10,24 @@ export const BookingTotalCalculator = ({
 }) => {
   const [pricingList, setPricingList] = useState([]);
   const [selectedPricing, setSelectedPricing] = useState(null);
-const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     const fetchPricing = async () => {
       try {
         const res = await fetch(
-          import.meta.env.VITE_API_URL + `/api/admin/pricing/location/${locationId}`
+          import.meta.env.VITE_API_URL +
+            `/api/admin/pricing/location/${locationId}`,
         );
         const data = await res.json();
-console.log(data)
-    const cleaned = data.filter(
-    (price) =>
-    price.isActive &&
-    (price.pricePerHour !== null || price.pricePerDay !== null)
-      );
+        console.log(data);
+        const cleaned = data.filter(
+          (price) =>
+            price.isActive &&
+            (price.pricePerHour !== null || price.pricePerDay !== null),
+        );
 
-    setPricingList(cleaned);
+        setPricingList(cleaned);
       } catch (err) {
         console.error("Pricing fetch failed:", err);
       }
@@ -38,15 +39,14 @@ console.log(data)
   useEffect(() => {
     if (!pricingList.length || !lockerSize) return;
 
-  const normalizedSize = lockerSize.toLowerCase();
+    const normalizedSize = lockerSize.toLowerCase();
 
-  const found = pricingList.find(
-    (p) => p.lockerSize.toLowerCase() === normalizedSize
-  );
+    const found = pricingList.find(
+      (p) => p.lockerSize.toLowerCase() === normalizedSize,
+    );
 
-  setSelectedPricing(found || null);
-
-}, [pricingList, lockerSize]);
+    setSelectedPricing(found || null);
+  }, [pricingList, lockerSize]);
 
   useEffect(() => {
     if (!selectedPricing || !startDate || !endDate || !billingType) {
@@ -72,19 +72,18 @@ console.log(data)
       total = fullDays * (selectedPricing.pricePerDay || 0);
     }
 
-const roundedTotal = Math.ceil(total);
+    const roundedTotal = Math.ceil(total);
 
-setTotal(roundedTotal);
-onTotalChange?.(roundedTotal);
-
+    setTotal(roundedTotal);
+    onTotalChange?.(roundedTotal);
   }, [selectedPricing, startDate, endDate, billingType, onTotalChange]);
 
   return (
-    <div>
-      <h3>Total:</h3>
-      <p>
+    <div className="flex">
+      <h3 className="text-black mr-2 font-bold">Total:</h3>
+      <span className="text-black">
         {selectedPricing?.currency || "PHP"} {total}
-      </p>
+      </span>
     </div>
   );
 };

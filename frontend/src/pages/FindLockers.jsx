@@ -24,7 +24,7 @@ function NearbyLocationsPage() {
 
           const API_URL = import.meta.env.VITE_API_URL;
           const res = await axios.get(
-            `${API_URL}/api/locations/nearby?lat=${lat}&lng=${lng}&distance=5000`,
+            `${API_URL}/api/locations/nearby?lat=${lat}&lng=${lng}&distance=20000000000`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,

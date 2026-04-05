@@ -19,7 +19,7 @@ export const BookingDates = ({
   };
 
   return (
-    <div>
+    <div className="">
       <label>{label}</label>
       <DatePicker
         name={name}
@@ -36,6 +36,15 @@ export const BookingDates = ({
         minTime={minTime}
         maxTime={maxTime}
         filterTime={filterPassedTime}
+        className="ml-2 form-input"
+      //   popperModifiers={[
+      //   {
+      //     name: "offset",
+      //     options: {
+      //       offset: [0, 10], // [horizontal, vertical] - Adds 10px spacing
+      //     },
+      //   },
+      // ]}
       />
       {error && <div className="error-text">{error}</div>}
     </div>

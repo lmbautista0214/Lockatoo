@@ -96,7 +96,7 @@ export const Login = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      toast.success("Login successfully!");
+      toast.success("Logged in successfully!");
 
       setTimeout(() => {
         if (data.user.role === "admin") {
@@ -105,6 +105,7 @@ export const Login = () => {
           navigate("/dashboard");
         }
       }, 1000);
+
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -119,7 +120,7 @@ export const Login = () => {
         </div>
 
         <h1 className="text-2xl font-bold text-center text-orange-500">
-          Welcome Back!
+          Welcome back!
         </h1>
 
         <p className="text-center text-gray-500 text-sm mt-2">

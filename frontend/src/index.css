@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
+
 /* HOMEPAGE */
+
+.booking-content {
+  @apply leading-tight m-1
+}
 
 @layer components {
   /* HERO */

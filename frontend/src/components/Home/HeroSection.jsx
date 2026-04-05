@@ -8,15 +8,15 @@ export const HeroSection = () => {
       <div className="hero-overlay"></div>
 
       <div className="hero-container">
-        <div className="hero-badge">✨ Your Personal Storage Solution</div>
+        <div className="hero-badge">✨ Your baggage solution</div>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
           Welcome to <br /> Lockatoo
         </h1>
 
         <p className="mt-5 text-base sm:text-lg max-w-xl mx-auto opacity-90">
-          Store your belongings safely and conveniently. Find lockers near you,
-          book instantly, and access 24/7.
+          Store your belongings safely and conveniently. 
+          <br/> Find lockers near you and book instantly!
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
@@ -24,14 +24,14 @@ export const HeroSection = () => {
             onClick={() => navigate("/register")}
             className="btn-home-primary"
           >
-            Get Started Free
+            Get started free
           </button>
 
           <button
             onClick={() => navigate("/login")}
             className="btn-home-secondary"
           >
-            Sign In
+            Sign in
           </button>
         </div>
       </div>

@@ -11,7 +11,7 @@ export const ModernSection = () => {
         </div>
 
         <div className="modern-content">
-          <h2 className="modern-title">Modern & Convenient</h2>
+          <h2 className="modern-title">Modern and convenient</h2>
 
           <p className="modern-text">
             Our state-of-the-art locker facilities are designed with your
@@ -21,7 +21,7 @@ export const ModernSection = () => {
           <ul className="modern-list">
             <li className="modern-list-item">
               <span className="modern-icon">✓</span>
-              24/7 monitoring
+              Easy booking
             </li>
 
             <li className="modern-list-item">

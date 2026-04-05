@@ -16,13 +16,13 @@ const sendEmailController = async (req, res) => {
       return res.status(400).json({
         message: "Incomplete booking data"
       });
-    }
+    };
 
     if (!["confirmation", "cancelled"].includes(type)) {
       return res.status(400).json({
         message: "Invalid email type"
       });
-    }
+    };
 
     const { subject, html } = getEmailContent(type, {
       bookingId,
