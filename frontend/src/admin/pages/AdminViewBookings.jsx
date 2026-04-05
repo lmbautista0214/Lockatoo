@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { CancelBooking } from "../../user/components/CancelBooking";
 import { CompleteBooking } from "../components/CompleteBooking";
-import { HeaderNav } from "../../components/HeaderNav";
 import { StartBooking } from "../components/StartBooking";
+import { AdminHeaderNav} from "../components/AdminHeaderNav";
 
 export const AdminViewBookings = () => {
   const listBookingsEndpoint =
@@ -65,9 +65,10 @@ export const AdminViewBookings = () => {
   if (error) return <div>Error loading bookings</div>;
 
   return (
-    <div className="block getstarted-section bg-linear-to-b from-[#faf8f7] to-[#FFE5D9] bg-white/10">
-      <HeaderNav />
-      <h2 className="getstarted-title my-2 mt-4">All transactions</h2>
+    <>
+      <AdminHeaderNav />
+      <div className="block getstarted-section bg-linear-to-b from-[#faf8f7] to-[#FFE5D9] bg-white/10">
+        <h2 className="getstarted-title my-2 mt-4">Manage transactions</h2>
 
       <div className="flex">
         <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
@@ -93,37 +94,37 @@ export const AdminViewBookings = () => {
         </div>
       </div>
 
-      <div className="feature-card my-2">
-        <select
-          name="locationId"
-          value={filters.locationId}
-          onChange={handleChange}
-          className="border border-[#adb3ba] text-[#1e2a38] p-2 m-2 lg:w-1/4 rounded-2xl mr-6"
-        >
-          <option value="">All locations</option>
-          {uniqueLocations.map((loc) => (
-            <option key={loc._id} value={loc._id.toString()}>
-              {loc.locationName || "Unknown"}
-            </option>
-          ))}
-        </select>
+        <div className="feature-card my-2">
+          <select
+            name="locationId"
+            value={filters.locationId}
+            onChange={handleChange}
+            className="border border-[#adb3ba] text-[#1e2a38] p-2 m-2 lg:w-1/4 rounded-2xl mr-6"
+          >
+            <option value="">All locations</option>
+            {uniqueLocations.map((loc) => (
+              <option key={loc._id} value={loc._id.toString()}>
+                {loc.locationName || "Unknown"}
+              </option>
+            ))}
+          </select>
 
-        <select
-          name="bookingStatus"
-          value={filters.bookingStatus}
-          onChange={handleChange}
-          className="border border-[#adb3ba] text-[#1e2a38] p-2 m-2 lg:w-1/4 rounded-2xl mr-6"
-        >
-          <option value="">All Status</option>
-          <option value="reserved">Reserved</option>
-          <option value="active">Active</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-          <option value="forfeited">Forfeited</option>
-        </select>
-      </div>
+          <select
+            name="bookingStatus"
+            value={filters.bookingStatus}
+            onChange={handleChange}
+            className="border border-[#adb3ba] text-[#1e2a38] p-2 m-2 lg:w-1/4 rounded-2xl mr-6"
+          >
+            <option value="">All Status</option>
+            <option value="reserved">Reserved</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="forfeited">Forfeited</option>
+          </select>
+        </div>
 
-      <div className="grid sm:grid-cols-2 gap-1 lg:grid-cols-3">
+      <div className="grid sm:grid-cols-2 gap-6 lg:grid-cols-3">
         {filteredBookings.length === 0 ? (
           <p>No bookings match the selected filters.</p>
         ) : (
@@ -151,57 +152,58 @@ export const AdminViewBookings = () => {
                 <b>End:</b> {new Date(b.end_datetime).toLocaleString()}
               </div>
 
-              {b.bookingStatus === "reserved" && (
-                <CancelBooking
-                  bookingId={b._id}
-                  booking={b}
-                  onCancelSuccess={(id) => {
-                    setBookings((prev) =>
-                      prev.map((booking) =>
-                        booking._id === id
-                          ? { ...booking, bookingStatus: "cancelled" }
-                          : booking,
-                      ),
-                    );
-                  }}
-                />
-              )}
+                {b.bookingStatus === "reserved" && (
+                  <CancelBooking
+                    bookingId={b._id}
+                    booking={b}
+                    onCancelSuccess={(id) => {
+                      setBookings((prev) =>
+                        prev.map((booking) =>
+                          booking._id === id
+                            ? { ...booking, bookingStatus: "cancelled" }
+                            : booking,
+                        ),
+                      );
+                    }}
+                  />
+                )}
 
-              {b.bookingStatus === "active" && (
-                <CompleteBooking
-                  bookingId={b._id}
-                  booking={b}
-                  onSuccess={(id) => {
-                    setBookings((prev) =>
-                      prev.map((booking) =>
-                        booking._id === id
-                          ? { ...booking, bookingStatus: "completed" }
-                          : booking,
-                      ),
-                    );
-                  }}
-                />
-              )}
+                {b.bookingStatus === "active" && (
+                  <CompleteBooking
+                    bookingId={b._id}
+                    booking={b}
+                    onSuccess={(id) => {
+                      setBookings((prev) =>
+                        prev.map((booking) =>
+                          booking._id === id
+                            ? { ...booking, bookingStatus: "completed" }
+                            : booking,
+                        ),
+                      );
+                    }}
+                  />
+                )}
 
-              {b.bookingStatus === "reserved" && (
-                <StartBooking
-                  bookingId={b._id}
-                  booking={b}
-                  onSuccess={(id) => {
-                    setBookings((prev) =>
-                      prev.map((booking) =>
-                        booking._id === id
-                          ? { ...booking, bookingStatus: "active" }
-                          : booking,
-                      ),
-                    );
-                  }}
-                />
-              )}
-            </div>
-          ))
-        )}
+                {b.bookingStatus === "reserved" && (
+                  <StartBooking
+                    bookingId={b._id}
+                    booking={b}
+                    onSuccess={(id) => {
+                      setBookings((prev) =>
+                        prev.map((booking) =>
+                          booking._id === id
+                            ? { ...booking, bookingStatus: "active" }
+                            : booking,
+                        ),
+                      );
+                    }}
+                  />
+                )}
+              </div>
+            ))
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

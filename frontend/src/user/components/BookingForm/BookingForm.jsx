@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Payment } from "../Payment/Payment";
-import { useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import "react-datepicker/dist/react-datepicker.css";
 import { setHours, setMinutes, setSeconds } from "date-fns";
 import { BookingDates } from "./BookingDates";
@@ -199,7 +199,7 @@ export const BookingForm = () => {
     <>
       <HeaderNav />
       <div className="block getstarted-section bg-linear-to-r from-[#faf8f7] to-[#FFE5D9] bg-white/10">
-        <h1 className="getstarted-title">Book a locker</h1>
+        <h1 className="getstarted-title mb-2">Book a locker</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 m-auto feature-card my-2 mr-2 w-full shadow">
@@ -273,6 +273,10 @@ export const BookingForm = () => {
               ))}
             </div>
 
+            {error.availability && (
+              <div className="text-orange-600 m-1">{error.availability}</div>
+            )}
+
             {error.billing && (
               <div className="text-orange-600 m-1">{error.billing}</div>
             )}
@@ -288,21 +292,27 @@ export const BookingForm = () => {
               />
             </div>
 
-            {bookingId && totalAmount > 0 && (
-              <Payment
-                amount={totalAmount}
-                bookingId={bookingId}
-                locationId={id}
-              />
-            )}
+            <div className="m-auto w-full block justify-center align-middle">
+              {bookingId && totalAmount > 0 && (
+                <Payment
+                  amount={totalAmount}
+                  bookingId={bookingId}
+                  locationId={id}
+                />
+              )}
+            </div>
           </div>
 
-          {error.availability && (
-            <div className="text-orange-600 m-1">{error.availability}</div>
-          )}
-          <button className="getstarted-btn flex justify-center m-auto my-3 w-1/2 bg-orange-300 text-orange-900">
+          <button className="mt-6 w-full py-3 rounded-lg bg-gradient-to-r from-orange-400 to-orange-600 text-white font-bold hover:scale-105 transition lg:w-1/4 lg:block lg:m-auto lg:my-3">
             Confirm
           </button>
+
+<Link to="/find-lockers">
+          <button className="mt-6 w-full py-3 rounded-lg bg-gradient-to-r from-orange-400 to-orange-600 text-white font-bold hover:scale-105 transition lg:w-1/4 lg:block lg:m-auto">
+            Back to locations
+          </button>
+</Link>
+
         </form>
       </div>
     </>

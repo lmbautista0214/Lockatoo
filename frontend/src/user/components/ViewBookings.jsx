@@ -50,6 +50,14 @@ export const ViewBookings = () => {
   ).length;
   const totalCount = bookings.length;
 
+  const statusStyles = {
+  active: "bg-green-100 text-green-700",
+  completed: "bg-blue-100 text-blue-700",
+  cancelled: "bg-red-100 text-red-700",
+  reserved: "bg-yellow-100 text-yellow-700",
+  paid: "bg-orange-100 text-orange-700"
+};
+
   if (loading) return <div>Loading bookings...</div>;
   if (error) return <div>Error loading bookings</div>;
 
@@ -60,12 +68,12 @@ export const ViewBookings = () => {
         <h2 className="getstarted-title">Bookings</h2>
         <p>Past and current bookings</p>
 
-        <div className="feature-card my-2">
+        <div className="mt-6 w-full py-3 rounded-lg bg-linear-to-r from-orange-400 to-orange-600 text-white font-bold my-4">
           <select
             name="locationId"
             value={filters.locationId}
             onChange={handleChange}
-            className="border border-[#adb3ba] text-[#1e2a38] p-2 m-2 lg:w-1/4 rounded-2xl mr-6"
+            className="border-2 border-[#fcfcfc] text-white p-2 m-2 lg:w-1/4 rounded-2xl mr-6"
           >
             <option value="">Location</option>
             {uniqueLocations.map((loc) => (
@@ -79,7 +87,7 @@ export const ViewBookings = () => {
             name="bookingStatus"
             value={filters.bookingStatus}
             onChange={handleChange}
-            className="border border-[#adb3ba] text-[#1e2a38] p-2 m-2 lg:w-1/4 rounded-2xl"
+            className="border-2 border-[#f3f9ff] text-white p-2 m-2 lg:w-1/4 rounded-2xl"
           >
             <option value="">Status</option>
             <option value="reserved">Reserved</option>
@@ -90,12 +98,22 @@ export const ViewBookings = () => {
           </select>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-1 lg:grid-cols-3">
+        <div className="grid sm:grid-cols-2 gap-6 lg:grid-cols-3">
           {filteredBookings.length === 0 ? (
             <p>No bookings match the selected filters.</p>
           ) : (
-            filteredBookings.map((b) => (
+            filteredBookings.map((b) => (              
               <div key={b._id} className="form-card bg-white/60">
+                <div className="flex items-end gap-3">
+                <div
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    statusStyles[b.bookingStatus] || "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {b.bookingStatus}
+                  </div>
+                </div>
+
                 <div className="booking-content">
                   <b>Location:</b> {b.locationId?.locationName || "Unknown"}
                 </div>

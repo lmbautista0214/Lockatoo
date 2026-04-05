@@ -10,8 +10,8 @@ import Pricing from "./pages/Pricing";
 import { FindLockers } from "./user/pages/FindLockers";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
-import { Dashboard } from "./user/pages/Dashboard";
-import { DashboardAdmin } from "./admin/pages/DashboardAdmin";
+import { Dashboard } from "./user/pages/DashBoard";
+import { DashboardAdmin } from "./admin/pages/DashBoardAdmin";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserProfile } from "./components/UserProfile";
 import { ProfileSettings } from "./pages/ProfileSettings";
@@ -70,7 +70,7 @@ function App() {
         />
 
         <Route
-          path="/profile-settings"
+          path="/profile-settings/:userId"
           element={
             <ProtectedRoute>
               <ProfileSettings />
@@ -88,10 +88,19 @@ function App() {
         />
 
         <Route
-          path="/bookings/view"
+          path="/bookings/"
           element={
             <ProtectedRoute>
               <ViewBookings />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/bookings/"
+          element={
+            <ProtectedRoute>
+              <AdminViewBookings />
             </ProtectedRoute>
           }
         />

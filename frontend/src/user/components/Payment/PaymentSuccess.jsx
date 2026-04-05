@@ -15,6 +15,11 @@ export const PaymentSuccess = () => {
           return;
         }
 
+        if (!bookingId) {
+          console.log("No booking found");
+          return;
+        }
+
         const res = await fetch(
           import.meta.env.VITE_API_URL + "/api/booking/" + bookingId,
           {
@@ -41,6 +46,17 @@ if (
       };
 
         setBookingDetails(booking);
+        
+        const result = await sendBookingEmailApi({
+          userEmail: booking.user.email,
+          bookingId: booking._id,
+          location: booking.locationId?.locationName,
+          dropOffTime: new Date(booking.start_datetime).toLocaleString(),
+          pickupTime: new Date(booking.end_datetime).toLocaleString(),
+          type: "confirmation",
+        });
+
+          console.log("Email success:", result);
 
       } catch (err) {
         console.log("Error in sendEmail:", err);
