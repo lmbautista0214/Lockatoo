@@ -14,14 +14,11 @@ export const getLocations = async () => {
   const locations = Array.isArray(data.data)
     ? data.data
     : Array.isArray(data)
-    ? data
-    : [];
+      ? data
+      : [];
 
-  return locations.filter(
-    (loc) => loc.status === "ACTIVE"
-  );
+  return locations.filter((loc) => loc.status === "ACTIVE");
 };
-
 
 export const fetchAdminStats = async () => {
   const res = await fetch(`${API_URL}/api/locations/stats`, {

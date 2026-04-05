@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { NearbyMap } from "../components/Find-Lockers/NearbyMap";
-import { HeaderNav } from "../components/HeaderNav";
+import { HeaderNav } from "../../components/HeaderNav";
 import { SearchLocation } from "../components/Find-Lockers/SearchLocation";
 import { LocationCardGrid } from "../components/Find-Lockers/LocationCard";
+import { BookingForm } from "../components/BookingForm/BookingForm";
 import axios from "axios";
 
-function NearbyLocationsPage() {
+export const FindLockers = () => {
   const [locations, setLocations] = useState([]);
   const [userCoords, setUserCoords] = useState(null);
   const [selectedLocationId, setSelectedLocationId] = useState(null);
@@ -24,7 +25,7 @@ function NearbyLocationsPage() {
 
           const API_URL = import.meta.env.VITE_API_URL;
           const res = await axios.get(
-            `${API_URL}/api/locations/nearby?lat=${lat}&lng=${lng}&distance=20000000000`,
+            `${API_URL}/api/locations/nearby?lat=${lat}&lng=${lng}&distance=50000000000`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -64,34 +65,13 @@ function NearbyLocationsPage() {
     ? locations.filter((loc) => loc._id === selectedLocationId)
     : filteredLocations;
 
-  // clear selection when clicking outside
-  useEffect(() => {
-    function handleClickOutside(e) {
-      const mapEl = document.querySelector(".leaflet-container");
-      const cardsEl = document.querySelector(".grid");
-
-      if (
-        mapEl &&
-        !mapEl.contains(e.target) &&
-        cardsEl &&
-        !cardsEl.contains(e.target)
-      ) {
-        setSelectedLocationId(null);
-      }
-    }
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [locations]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFFBF5] to-[#FFE5D9]">
       <HeaderNav />
 
-      <main className="max-w-6xl mx-auto px-4 py-4">
-        <h1 className="text-2xl font-bold text-[#2A2A2A] mb-3">
-          Nearby Locations
-        </h1>
+      <main className="relative z-0 max-w-6xl mx-auto px-4 py-4">
+        <h1 className="text-2xl font-bold text-[#2A2A2A] mb-3">Find Lockers</h1>
+        <span>Browse available locker locations near you</span>
 
         {/* Map */}
         <div className="mb-5">
@@ -127,6 +107,4 @@ function NearbyLocationsPage() {
       </main>
     </div>
   );
-}
-
-export default NearbyLocationsPage;
+};
