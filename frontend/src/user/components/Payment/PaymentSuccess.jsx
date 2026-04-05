@@ -15,6 +15,11 @@ export const PaymentSuccess = () => {
           return;
         }
 
+        if (!bookingId) {
+          console.log("No booking found");
+          return;
+        }
+
         const res = await fetch(
           import.meta.env.VITE_API_URL + "/api/booking/" + bookingId,
           { credentials: "include" },
