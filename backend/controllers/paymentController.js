@@ -2,6 +2,7 @@ import paypal from "@paypal/checkout-server-sdk";
 import client from "../configs/paypalClient.js";
 import Payment from "../models/paymentModel.js";
 import {Booking} from "../models/bookingModel.js";
+import Location from "../models/locationModel.js";
 
 const createPayPalOrder = async (req, res) => {
   const { amount } = req.body;
@@ -75,4 +76,68 @@ const payer = capture.result.payer;
   }
 };
 
-export { createPayPalOrder, capturePayPalOrder };
+const getDashboardStatsPayment = async (req, res) => {
+  try {
+    const adminId = req.user.id;
+
+    const locations = await Location.find({ createdBy: adminId });
+    const locationIds = locations.map((loc) => loc._id);
+
+    if (locationIds.length === 0) {
+      return res.json({
+        activeBookings: 0,
+        totalBookings: 0,
+        totalRevenue: 0,
+      });
+    }
+
+    const activeBookings = await Booking.countDocuments({
+      locationId: { $in: locationIds },
+      bookingStatus: { $in: ["reserved", "active"] },
+    });
+
+    const totalBookings = await Booking.countDocuments({
+      locationId: { $in: locationIds },
+    });
+
+    const revenueResult = await Payment.aggregate([
+      {
+        $lookup: {
+          from: "bookings",
+          localField: "booking",
+          foreignField: "_id",
+          as: "bookingData",
+        },
+      },
+      { $unwind: "$bookingData" },
+
+      {
+        $match: {
+          paymentStatus: "completed",
+          "bookingData.locationId": { $in: locationIds },
+        },
+      },
+
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const totalRevenue = revenueResult[0]?.total || 0;
+
+    res.json({
+      activeBookings,
+      totalBookings,
+      totalRevenue,
+    });
+
+  } catch (err) {
+    console.error("DASHBOARD PAYMENT ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export { createPayPalOrder, capturePayPalOrder, getDashboardStatsPayment };

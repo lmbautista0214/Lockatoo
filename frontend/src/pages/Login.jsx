@@ -15,9 +15,9 @@ export const Login = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (token) {
-      navigate("/dashboard");
-    }
+    // if (token) {
+    //   navigate("/dashboard");
+    // }
   }, []);
 
   const inputStyle = (error) =>
@@ -99,7 +99,11 @@ export const Login = () => {
       toast.success("Login successfully!");
 
       setTimeout(() => {
-        navigate("/dashboard");
+        if (data.user.role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       }, 1000);
     } catch (error) {
       console.log(error);

@@ -1,6 +1,7 @@
 import { Locker } from "../models/lockerModel.js";
 import mongoose from "mongoose";
 import {Booking} from "../models/bookingModel.js";
+import Location from "../models/locationModel.js";
 
 export const createLockers = async (req, res) => {
   try {
@@ -187,5 +188,50 @@ export const getLockerSizesByLocation = async (req, res, next) => {
     console.error("LOCKER SIZE ERROR:", error);
     res.status(500).json({ message: error.message });
     next(error);
+  }
+};
+
+export const getLockerStatusStats = async (req, res) => {
+  try {
+    const adminId = req.user.id;
+
+    const locations = await Location.find({
+      createdBy: adminId,
+    });
+
+    const locationIds = locations.map((loc) => loc._id);
+
+    if (locationIds.length === 0) {
+      return res.json({
+        available: 0,
+        occupied: 0,
+        reserved: 0,
+        maintenance: 0,
+      });
+    }
+
+    const lockers = await Locker.find({
+      locationId: { $in: locationIds },
+    });
+
+    const stats = {
+      available: 0,
+      occupied: 0,
+      reserved: 0,
+      maintenance: 0,
+    };
+
+    lockers.forEach((l) => {
+      if (l.status === "available") stats.available++;
+      else if (l.status === "occupied") stats.occupied++;
+      else if (l.status === "reserved") stats.reserved++;
+      else if (l.status === "out_of_service") stats.maintenance++;
+    });
+
+    res.json(stats);
+
+  } catch (err) {
+    console.error("LOCKER STATUS ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 };
