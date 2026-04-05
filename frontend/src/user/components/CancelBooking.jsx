@@ -1,37 +1,38 @@
 import { useState } from "react";
-import sendBookingEmailApi from "../../api/emailApi";
 
 export const CancelBooking = ({ bookingId, booking, onCancelSuccess }) => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const userDetails = {
-    userEmail: booking?.user?.email,
-    bookingId: booking._id,
-    location: booking.locationId?.locationName,
-    dropOffTime: new Date(booking.start_datetime).toLocaleString(),
-    pickupTime: new Date(booking.end_datetime).toLocaleString(),
-  };
 
-  const updateEndpoint =
-    import.meta.env.VITE_API_URL + "/api/booking/edit/" + bookingId;
+  const cancelEndpoint =
+    import.meta.env.VITE_API_URL + "/api/booking/cancel";
 
   const handleCancel = async () => {
     try {
-      const response = await fetch(updateEndpoint, {
-        method: "PUT",
+      setLoading(true);
+
+      const response = await fetch(cancelEndpoint, {
+        method: "POST", 
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ bookingStatus: "cancelled" }),
+        body: JSON.stringify({ bookingId }), 
       });
 
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to cancel booking");
+      }
+
       if (onCancelSuccess) onCancelSuccess(bookingId);
 
       setShowModal(false);
     } catch (error) {
-      console.log("error", error);
+      console.log("Cancel error:", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,10 +42,6 @@ export const CancelBooking = ({ bookingId, booking, onCancelSuccess }) => {
       className="getstarted-btn bg-orange-100 text-orange-900"
         onClick={() => {
           setShowModal(true);
-          sendBookingEmailApi({
-            ...userDetails,
-            type: "cancelled",
-          });
         }}
       >
         Cancel booking

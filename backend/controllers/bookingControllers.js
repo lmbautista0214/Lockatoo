@@ -1,5 +1,6 @@
 import {Booking} from "../models/bookingModel.js"
 import Location from "../models/locationModel.js";
+import { sendBookingEmail } from "./sendEmailController.js";
 
 const listBookings = async (req, res) => {
     try{
@@ -253,4 +254,33 @@ const getBookingsByLocation = async (req, res) => {
   }
 };
 
-export { listBookings, listUserBookings, createBooking, readBooking, updateBooking, deleteBooking, checkAvailability, getDashboardStats, getRecentBookings, getBookingsByLocation };
+const cancelBooking = async (req, res) => {
+  try {
+    const { bookingId } = req.body;
+
+    const booking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { bookingStatus: "cancelled" },
+      { new: true }
+    ).populate("locationId user");
+
+    if (!booking) throw new Error("Booking not found");
+
+    try {
+      await sendBookingEmail(
+        "cancelled",
+        booking,
+        booking.user.email
+      );
+    } catch (err) {
+      console.error("CANCEL EMAIL FAILED:", err.message);
+    }
+
+    res.json({ success: true, booking });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export { listBookings, listUserBookings, createBooking, readBooking, updateBooking, deleteBooking, checkAvailability, getDashboardStats, getRecentBookings, getBookingsByLocation, cancelBooking };

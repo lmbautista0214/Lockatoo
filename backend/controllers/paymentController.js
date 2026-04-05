@@ -3,6 +3,8 @@ import client from "../configs/paypalClient.js";
 import Payment from "../models/paymentModel.js";
 import {Booking} from "../models/bookingModel.js";
 import Location from "../models/locationModel.js";
+import { sendBookingEmail } from "./sendEmailController.js";
+
 
 const createPayPalOrder = async (req, res) => {
   const { amount } = req.body;
@@ -53,15 +55,40 @@ const payer = capture.result.payer;
       },
     });
 
-    const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
-      bookingStatus: "reserved",
-      paymentStatus: "completed",
-      payment: payment._id,
-    },
-    { returnDocument: "after" });
+    // const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
+    //   bookingStatus: "reserved",
+    //   paymentStatus: "completed",
+    //   payment: payment._id,
+    // },
+    // { returnDocument: "after" });
+
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      {
+        bookingStatus: { $in: ["reserved", "active"] },
+        paymentStatus: "completed",
+        payment: payment._id,
+      },
+      { new: true }
+    )
+    .populate("locationId")
+    .populate("userId");
 
     if (!updatedBooking) {
       throw new Error("Booking not found");
+    }
+
+    try {
+      const userEmail =
+        updatedBooking.userId?.email || payer.email_address;
+
+      await sendBookingEmail(
+        "confirmation",
+        updatedBooking,
+        userEmail
+      );
+    } catch (emailErr) {
+      console.error("EMAIL FAILED:", emailErr.message);
     }
 
     res.json({
