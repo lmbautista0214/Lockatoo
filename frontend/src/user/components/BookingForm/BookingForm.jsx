@@ -7,6 +7,7 @@ import { BookingDates } from "./BookingDates";
 import { BookingLocker } from "./BookingLocker";
 import { BookingTotalCalculator } from "./BookingTotalCalculator";
 import { useCallback } from "react";
+import { HeaderNav } from "../../../components/HeaderNav";
 
 export const BookingForm = () => {
   const { id } = useParams();
@@ -196,6 +197,7 @@ export const BookingForm = () => {
 
   return (
     <>
+      <HeaderNav />
       <div className="block getstarted-section bg-linear-to-r from-[#faf8f7] to-[#FFE5D9] bg-white/10">
         <h1 className="getstarted-title">Book a locker</h1>
 
