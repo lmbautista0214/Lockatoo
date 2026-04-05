@@ -11,8 +11,8 @@ import MockPayment from "./components/MockPayment";
 import NearbyLocationsPage from "./pages/FindLockers";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
-import { Dashboard } from "./user/pages/Dashboard";
-import { DashboardAdmin } from "./admin/pages/DashboardAdmin";
+import { Dashboard } from "./user/pages/DashBoard";
+import { DashboardAdmin } from "./admin/pages/DashBoard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserProfile } from "./components/UserProfile";
 import { ProfileSettings } from "./pages/ProfileSettings";
@@ -27,7 +27,6 @@ function App() {
   return (
     <Router>
       <Toaster position="top-right" />
-      {/* <AdminViewBookings /> */}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -46,16 +45,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardAdmin />
-            </ProtectedRoute>
-          }
-        />
-        
         <Route
           path="/find-lockers"
           element={
@@ -75,7 +64,7 @@ function App() {
         />
 
         <Route
-          path="/bookings"
+          path="/bookings/:id"
           element={
             <ProtectedRoute>
               <BookingForm />

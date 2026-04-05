@@ -9,25 +9,23 @@ import { BookingTotalCalculator } from "./BookingTotalCalculator";
 import { useCallback } from "react";
 
 export const BookingForm = () => {
-  //store ID param -- update while routing
-  // const {id} = useParams();
-  //sample ID for testing -- delete when routing, retain useParams above
-  const id = "69cc981b31e1ba903529acdc";
+  const { id } = useParams();
 
   const billingTypes = [
     { label: "Per hour", value: "hourly" },
     { label: "Per day", value: "daily" },
   ];
 
-  const reservationEndpoint = import.meta.env.VITE_API_URL + "/api/booking/reserve";
+  const reservationEndpoint =
+    import.meta.env.VITE_API_URL + "/api/booking/reserve";
   const [formData, setFormData] = useState({
-  locationId: id,
-  lockerSize: "",
-  lockerId: "",
-  start_datetime: "",
-  end_datetime: "",
-  billingType: "",
-  total: "",
+    locationId: id,
+    lockerSize: "",
+    lockerId: "",
+    start_datetime: "",
+    end_datetime: "",
+    billingType: "",
+    total: "",
   });
 
   const [bookingId, setBookingId] = useState(null);
@@ -135,7 +133,7 @@ export const BookingForm = () => {
     if (!isAvailable) {
       newErrors.availability = "This locker is already booked for that time.";
       hasError = true;
-    };
+    }
 
     if (formData.billingType === "daily" && startDate && endDate) {
       const sameDay = startDate.toDateString() === endDate.toDateString();
@@ -198,12 +196,14 @@ export const BookingForm = () => {
 
   return (
     <>
-      <div>
+      <div className="block getstarted-section bg-linear-to-r from-[#faf8f7] to-[#FFE5D9] bg-white/10">
+        <h1 className="getstarted-title">Book a locker</h1>
+
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2">
-            <div>
+          <div className="grid grid-cols-1 m-auto feature-card my-2 mr-2 w-full shadow">
+            <div className="feature-card bg-orange-50 my-2 mr-2 w-full font-bold">
               <BookingDates
-                label={"Select the start date:"}
+                label={"Start date and time:"}
                 name="start_datetime"
                 selected={startDate}
                 onChange={(date) => {
@@ -221,15 +221,13 @@ export const BookingForm = () => {
               />
 
               {error.startDate && (
-                <div style={{ color: "red", fontSize: "0.9rem" }}>
-                  {error.startDate}
-                </div>
+                <div className="text-orange-600 m-1">{error.startDate}</div>
               )}
             </div>
 
-            <div>
+            <div className="feature-card bg-orange-50 my-2 mr-2 w-full font-bold">
               <BookingDates
-                label={"Select the end date:"}
+                label={"End date and time:"}
                 name="end_datetime"
                 selected={endDate}
                 onChange={(date) => setEndDate(date)}
@@ -241,21 +239,23 @@ export const BookingForm = () => {
                 }
                 maxTime={setHours(setMinutes(new Date(), 0), 22)}
               />
+
               {error.endDate && (
-                <div style={{ color: "red", fontSize: "0.9rem" }}>
-                  {error.endDate}
-                </div>
+                <div className="text-orange-600 m-1">{error.endDate}</div>
               )}
             </div>
 
-            <BookingLocker
-              lockers={lockers}
-              formData={formData}
-              setFormData={setFormData}
-            />
+            <div className="feature-card bg-orange-50 my-2 mr-2 w-full">
+              <BookingLocker
+                lockers={lockers}
+                formData={formData}
+                setFormData={setFormData}
+                className="form-input"
+              />
+            </div>
 
-            <div>
-              <p>Billing rate</p>
+            <div className="feature-card bg-orange-50 my-2 mr-2 w-full">
+              <p className="font-bold">Billing rate</p>
               {billingTypes.map((type) => (
                 <label key={type.value}>
                   <input
@@ -264,6 +264,7 @@ export const BookingForm = () => {
                     value={type.value}
                     checked={formData.billingType === type.value}
                     onChange={handleChange}
+                    className="m-2"
                   />
                   {type.label}
                 </label>
@@ -271,31 +272,35 @@ export const BookingForm = () => {
             </div>
 
             {error.billing && (
-              <div style={{ color: "red", fontSize: "0.9rem" }}>
-                {error.billing}
-              </div>
+              <div className="text-orange-600 m-1">{error.billing}</div>
             )}
 
-            <BookingTotalCalculator
-              locationId={formData.locationId}
-              lockerSize={formData.lockerSize}
-              billingType={formData.billingType}
-              startDate={startDate}
-              endDate={endDate}
-              onTotalChange={handleTotalChange}
-            />
+            <div className="feature-card bg-orange-200 my-2 hover:shadow mr-2 w-full">
+              <BookingTotalCalculator
+                locationId={formData.locationId}
+                lockerSize={formData.lockerSize}
+                billingType={formData.billingType}
+                startDate={startDate}
+                endDate={endDate}
+                onTotalChange={handleTotalChange}
+              />
+            </div>
 
             {bookingId && totalAmount > 0 && (
-              <Payment amount={totalAmount} bookingId={bookingId} locationId={id} />
+              <Payment
+                amount={totalAmount}
+                bookingId={bookingId}
+                locationId={id}
+              />
             )}
           </div>
 
           {error.availability && (
-            <div style={{ color: "red", fontSize: "0.9rem" }}>
-              {error.availability}
-            </div>
+            <div className="text-orange-600 m-1">{error.availability}</div>
           )}
-          <button>Confirm</button>
+          <button className="getstarted-btn flex justify-center m-auto my-3 w-1/2 bg-orange-300 text-orange-900">
+            Confirm
+          </button>
         </form>
       </div>
     </>

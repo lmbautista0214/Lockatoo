@@ -31,6 +31,7 @@ export const CompleteBooking = ({ bookingId, onSuccess }) => {
   return (
     <>
       <button
+      className="getstarted-btn bg-orange-100 text-green-900"
         onClick={() => {
           setShowModal(true);
         }}
@@ -50,7 +51,7 @@ export const CompleteBooking = ({ bookingId, onSuccess }) => {
               <button
                 onClick={() => setShowModal(false)}
                 disabled={loading}
-                className="px-3 py-1 border rounded hover:bg-gray-100"
+                className="getstarted-btn bg-green-100"
               >
                 No
               </button>
@@ -58,7 +59,7 @@ export const CompleteBooking = ({ bookingId, onSuccess }) => {
               <button
                 onClick={handleCancel}
                 disabled={loading}
-                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                className="getstarted-btn bg-green-500 text-white"
               >
                 {loading ? "Completing..." : "Yes"}
               </button>

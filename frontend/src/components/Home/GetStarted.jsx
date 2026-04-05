@@ -6,7 +6,7 @@ export const GetStarted = () => {
   return (
     <div className="getstarted-section">
       <div className="getstarted-container">
-        <h2 className="getstarted-title">Ready to Get Started?</h2>
+        <h2 className="getstarted-title">Ready to get started?</h2>
 
         <p className="getstarted-text">
           Join thousands of satisfied customers using Lockatoo for their storage
@@ -17,7 +17,7 @@ export const GetStarted = () => {
           onClick={() => navigate("/register")}
           className="getstarted-btn"
         >
-          Create Free Account
+          Create free account
         </button>
 
         <div className="getstarted-bg-circle -bottom-10 -left-10"></div>

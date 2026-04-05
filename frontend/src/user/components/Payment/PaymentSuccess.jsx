@@ -11,6 +11,11 @@ export const PaymentSuccess = () => {
   useEffect(() => {
     const sendEmail = async () => {
       try {
+        if (!bookingId) {
+          console.log("No booking found");
+          return;
+        }
+
         const res = await fetch(
           import.meta.env.VITE_API_URL + "/api/booking/" + bookingId,
           {
@@ -19,24 +24,38 @@ export const PaymentSuccess = () => {
         );
 
         const data = await res.json();
-        
+
+        if (!res.ok) {
+        console.error("Failed to fetch booking:", data);
+        return;
+}
         const booking = data;
         console.log("booking data", booking);
 
-        if (!booking) return;
+if (
+        !booking?._id ||
+        !booking?.user?.email ||
+        !booking?.locationId?.locationName
+      ) {
+        console.log("Missing required booking fields", booking);
+        return;
+      };
 
         setBookingDetails(booking);
-        console.log("bookingdetails", bookingDetails)
-        await sendBookingEmailApi({
-          userEmail: booking.user?.email,
+        
+        const result = await sendBookingEmailApi({
+          userEmail: booking.user.email,
           bookingId: booking._id,
           location: booking.locationId?.locationName,
           dropOffTime: new Date(booking.start_datetime).toLocaleString(),
           pickupTime: new Date(booking.end_datetime).toLocaleString(),
           type: "confirmation",
         });
+
+          console.log("Email success:", result);
+
       } catch (err) {
-        console.log(err);
+        console.log("Error in sendEmail:", err);
       }
     };
 

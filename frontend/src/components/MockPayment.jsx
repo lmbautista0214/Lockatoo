@@ -5,7 +5,7 @@ import sendBookingEmailApi from "../api/emailApi";
 const MockPayment = () => {
 
     const mockBooking = {
-        userEmail: "shimarilyn@gmail.com",
+        userEmail: "albien.joy@gmail.com",
         bookingId: "BD-1001",
         location: "NAIA Terminal 3",
         dropOffTime: "10:00 AM",

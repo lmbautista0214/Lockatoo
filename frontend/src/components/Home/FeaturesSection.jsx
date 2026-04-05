@@ -1,25 +1,25 @@
 export const FeaturesSection = () => {
   const features = [
     {
-      title: "Secure Storage",
-      desc: "State-of-the-art security systems to keep your belongings safe and protected",
+      title: "Secure storage",
+      desc: "Security system to keep your belongings safe and protected",
       color: "bg-yellow-400",
       icon: "🔒",
     },
     {
-      title: "Multiple Locations",
+      title: "Multiple locations",
       desc: "Find lockers at convenient locations across the city, wherever you need them",
       color: "bg-orange-400",
       icon: "📍",
     },
     {
-      title: "24/7 Access",
-      desc: "Access your locker anytime with our convenient self-service system",
+      title: "Easy access",
+      desc: "Access your locker through our friendly attendants",
       color: "bg-purple-500",
       icon: "⏰",
     },
     {
-      title: "Easy Booking",
+      title: "Easy booking",
       desc: "Book and manage your lockers through our simple, intuitive interface",
       color: "bg-green-500",
       icon: "🛡️",
@@ -30,7 +30,7 @@ export const FeaturesSection = () => {
     <section className="home-section">
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-          Why Choose Lockatoo?
+          Why choose Lockatoo?
         </h2>
 
         <p className="mt-3 text-gray-600">
