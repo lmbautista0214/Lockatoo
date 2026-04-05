@@ -53,6 +53,7 @@ export const Payment = ({ amount, bookingId, locationId }) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         orderId: data.orderID,
         bookingId,
