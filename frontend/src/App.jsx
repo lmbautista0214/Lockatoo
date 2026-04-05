@@ -79,16 +79,7 @@ function App() {
         />
 
         <Route
-          path="/bookings/:id"
-          element={
-            <ProtectedRoute>
-              <BookingForm />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/bookings/"
+          path="/bookings"
           element={
             <ProtectedRoute>
               <ViewBookings />
