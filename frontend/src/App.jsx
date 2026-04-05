@@ -12,7 +12,7 @@ import NearbyLocationsPage from "./pages/FindLockers";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { Dashboard } from "./user/pages/DashBoard";
-import { DashboardAdmin } from "./admin/pages/DashBoard";
+import { DashboardAdmin } from "./admin/pages/DashBoardAdmin";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserProfile } from "./components/UserProfile";
 import { ProfileSettings } from "./pages/ProfileSettings";
@@ -36,15 +36,15 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* Protected Dashboard */}
-        <Route
-          path="/dashboard"
+          <Route
+          path="/admin/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <DashboardAdmin />
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/find-lockers"
           element={
