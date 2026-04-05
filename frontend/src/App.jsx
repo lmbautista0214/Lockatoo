@@ -7,7 +7,6 @@ import { Locker } from "./admin/pages/Locker";
 import { Toaster } from "react-hot-toast";
 
 import Pricing from "./pages/Pricing";
-import MockPayment from "./components/MockPayment";
 import { FindLockers } from "./user/pages/FindLockers";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
@@ -49,7 +48,7 @@ function App() {
           path="/admin/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <DashboardAdmin />
             </ProtectedRoute>
           }
         />
@@ -99,7 +98,6 @@ function App() {
         />
 
         <Route path="/pricing" element={<Pricing />} />
-        <Route path="/payment" element={<MockPayment />} />
       </Routes>
     </Router>
   );

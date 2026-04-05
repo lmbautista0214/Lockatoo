@@ -8,43 +8,56 @@ const Pricing = () => {
 
   const [pricing, setPricing] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [pricingLoading, setPricingLoading] = useState(false);
 
-  const fetchPricing = async (locationId = selectedLocation) => {
+  const fetchPricing = async (locationId) => {
     if (!locationId) return;
 
     try {
+      setPricingLoading(true);
       const data = await listPricingByLocation(locationId);
-      console.log("Pricing data:", data);
       setPricing(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Failed to fetch pricing:", error);
       setPricing([]);
+    } finally {
+      setPricingLoading(false);
     }
   };
-
+  
   useEffect(() => {
     if (!selectedLocation) return;
-    fetchPricing(selectedLocation);
+
+    const load = async () => {
+      setPricing([]);
+      await fetchPricing(selectedLocation);
+    };
+
+    load();
   }, [selectedLocation]);
 
   return (
     <>
-      <h1>Pricing & Rates</h1>
-      <p>Manage rental rates for different locker sizes</p>
+      <div className="p-7 min-h-screen bg-gradient-to-r from-[#f9f3ff] to-[#e7d6ff]">
+        <div className="mb-7">
+          <h1 className="text-2xl font-bold">Pricing & Rates</h1>
+          <p className="text-gray-600">Manage rental rates for different locker sizes</p>
+        </div>
 
-      <div>
+        <div className="grid grid-cols-1 gap-6">
 
-        <LockerPricing
-          pricing={pricing}
-          refresh={fetchPricing}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-        />
+          <LockerPricing
+            pricing={pricing}
+            refresh={fetchPricing}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+            pricingLoading={pricingLoading}
+          />
 
-        <RateComparison pricing={pricing} />
+          <RateComparison pricing={pricing} />
 
-        <PricingGuidelines />
+          <PricingGuidelines />
 
+        </div>
       </div>
     </>
   );

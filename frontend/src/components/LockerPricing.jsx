@@ -12,7 +12,7 @@ const sizeMap = {
   m: "Medium",
   l: "Large",
   xl: "Extra Large",
-  xxl: "XXL"
+  xxl: "Double Extra Large"
 };
 
 const rateFields = [
@@ -25,11 +25,12 @@ const rateFields = [
 
 const sizeOrder = ["xs", "s", "m", "l", "xl", "xxl"];
 
-const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation }) => {
+const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation, pricingLoading }) => {
 
   const [locations, setLocations] = useState([]);
   const [lockerSizes, setLockerSizes] = useState([]);
   const [tempValues, setTempValues] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const fetchLocations = async () => {
     try {
@@ -54,7 +55,7 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
 
       setLocations(locationsData);
 
-      if (locationsData.length > 0) {
+      if (locationsData.length > 0 && !selectedLocation) {
         setSelectedLocation(locationsData[0]._id);
       }
 
@@ -79,42 +80,6 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
     setLockerSizes(formatted);
   };
 
-  const initializePricing = async () => {
-    try {
-      const missing = lockerSizes.filter(
-        locker =>
-          !pricing.find(
-            p => p.lockerSize?.toLowerCase() === locker.size
-          )
-      );
-
-      if (missing.length > 0) {
-        await Promise.all(
-          missing.map(locker =>
-            createPricing({
-              locationId: selectedLocation,
-              lockerSize: locker.size,
-              pricePerHour: null,
-              pricePerDay: null,
-              pricePerWeek: null,
-              pricePerMonth: null,
-              extraHourFee: null
-            })
-          )
-        );
-
-        await refresh(selectedLocation);
-      }
-
-    } catch (error) {
-      console.error("Initialize pricing error:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchLocations();
-  }, []);
-
   useEffect(() => {
     if (!selectedLocation) return;
 
@@ -126,49 +91,65 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
   }, [selectedLocation]);
 
   useEffect(() => {
-    if (!selectedLocation || lockerSizes.length === 0) return;
-
     const init = async () => {
-      await initializePricing();
+      setLoading(true);
+      await fetchLocations();
+      setLoading(false);
     };
-
     init();
-  }, [lockerSizes]);
+  }, []);
 
+  useEffect(() => {
+    setLockerSizes([]);
+  }, [selectedLocation]);
+
+  useEffect(() => {
+  setTempValues({});
+}, [selectedLocation, pricing]);
 
   const getPricingByLocker = (lockerSize) => {
     return pricing.find(
-      (p) => p.lockerSize?.toLowerCase() === lockerSize?.toLowerCase()
+      (p) =>
+        (p.locationId === selectedLocation ||
+          p.locationId?._id === selectedLocation) &&
+        p.lockerSize?.toLowerCase() === lockerSize?.toLowerCase()
     );
   };
 
   const ensurePricingExists = async (lockerSize) => {
     const existing = pricing.find(
-      (p) => p.lockerSize?.toLowerCase() === lockerSize?.toLowerCase()
+      (p) =>
+        (p.locationId === selectedLocation ||
+          p.locationId?._id === selectedLocation) &&
+        p.lockerSize?.toLowerCase() === lockerSize?.toLowerCase()
     );
 
-    if (!existing) {
-      const newPricing = await createPricing({
-        locationId: selectedLocation,
-        lockerSize,
-        pricePerHour: null,
-        pricePerDay: null,
-        pricePerWeek: null,
-        pricePerMonth: null,
-        extraHourFee: null
-      });
+    if (existing) return existing;
 
-      return newPricing;
-    }
+    const newPricing = await createPricing({
+      locationId: selectedLocation,
+      lockerSize,
+      pricePerHour: null,
+      pricePerDay: null,
+      pricePerWeek: null,
+      pricePerMonth: null,
+      extraHourFee: null
+    });
 
-    return existing;
+    return newPricing;
   };
 
   const handleEnableRate = async (lockerSize, field) => {
     const p = await ensurePricingExists(lockerSize);
 
+    setTempValues(prev => ({
+      ...prev,
+      [p._id + field]: 0
+    }));
+
     await updatePricing(p._id, { [field]: 0 });
-    await refresh(selectedLocation); 
+
+    await refresh(selectedLocation);
   };
 
   const handleDisableRate = async (p, field) => {
@@ -191,27 +172,56 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
 
   return (
     <div>
-      <select
-        value={selectedLocation}
-        onChange={(e) => setSelectedLocation(e.target.value)}
-      >
-        {locations.map((loc) => (
-          <option key={loc._id} value={loc._id}>
-            {loc.locationName}
-          </option>
-        ))}
-      </select>
+      <div className="mb-6">
+        <label className="block text-lg mb-2 font-bold">
+          Select Location
+        </label>
 
-      <div className="grid grid-cols-3 gap-6 mt-4">
+        <div className="relative">
+          <select
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
+            className="w-full appearance-none bg-white border border-[#ffeddf] rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-orange-200 cursor-pointer"
+          >
+            {locations.map((loc) => (
+              <option key={loc._id} value={loc._id}>
+                {loc.locationName}
+              </option>
+            ))}
+          </select>
 
-        {lockerSizes.map((locker) => {
+          <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#980dfa]">
+            ▼
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+         {loading || pricingLoading ? (
+          [...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-white p-6 rounded-2xl border border-[#ffeddf] animate-pulse"
+            >
+              <div className="h-5 w-40 bg-gray-200 rounded mb-6"></div>
+
+              {[...Array(5)].map((_, j) => (
+                <div key={j} className="flex justify-between items-center mb-4">
+                  <div className="h-4 w-24 bg-gray-200 rounded"></div>
+                  <div className="h-8 w-28 bg-gray-200 rounded-lg"></div>
+                </div>
+              ))}
+            </div>
+          ))
+        ) : (
+          lockerSizes.map((locker) => {
 
           const data = getPricingByLocker(locker.size);
 
           return (
-            <div key={locker.size} className="border p-4 rounded">
+            <div key={`${selectedLocation}-${locker.size}`} className="bg-white p-6 rounded-2xl border border-[#ffeddf] hover:shadow-md transition">
 
-              <h2>{sizeMap[locker.size]} Locker</h2>
+              <h2 className="text-lg font-semibold mb-4">{sizeMap[locker.size]} Locker</h2>
 
               {rateFields.map(({ key, label }) => {
 
@@ -219,18 +229,23 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
                 const isEnabled = value !== null && value !== undefined;
 
                 return (
-                  <div key={key} style={{ marginBottom: "10px" }}>
-
-                    <label>{label}</label>
+                  <div key={key} className="flex items-center justify-between mb-3">
+                    
+                    <span className="text-gray-600 text-m">{label}</span>
 
                     {!isEnabled ? (
-                      <button onClick={() => handleEnableRate(locker.size, key)}>
+                      <button
+                        onClick={() => handleEnableRate(locker.size, key)}
+                        className="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer"
+                      >
                         Enable
                       </button>
                     ) : (
-                      <div>
+                      <div className="flex items-center gap-3">
+                        
                         <input
                           type="number"
+                          className="w-24 px-2 py-1 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-200"
                           value={tempValues[data?._id + key] ?? value ?? ""}
                           onChange={(e) =>
                             setTempValues(prev => ({
@@ -248,16 +263,20 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
                               tempValues[data?._id + key]
                             )
                           }
+                          className="text-xs px-4 py-1 rounded-full bg-green-100 text-green-600 hover:bg-green-200 cursor-pointer"
                         >
-                          Update
+                          Save
                         </button>
-                        
-                        <button onClick={() => handleDisableRate(data, key)}>
+
+                        <button
+                          onClick={() => handleDisableRate(data, key)}
+                          className="text-xs px-4 py-1 rounded-full bg-red-100 text-red-600 hover:bg-red-200 cursor-pointer"
+                        >
                           Disable
                         </button>
+
                       </div>
                     )}
-
                   </div>
                 );
 
@@ -265,8 +284,8 @@ const LockerPricing = ({ pricing, refresh, selectedLocation, setSelectedLocation
 
             </div>
           );
-
-        })}
+        
+        }))}
 
       </div>
 

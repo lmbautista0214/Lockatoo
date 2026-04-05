@@ -1,5 +1,5 @@
 import express from "express";
-import {listBookings, listUserBookings, createBooking, readBooking, updateBooking, checkAvailability, deleteBooking, getBookingsByLocation, getRecentBookings, getDashboardStats} from "../controllers/bookingControllers.js"
+import {listBookings, listUserBookings, createBooking, readBooking, updateBooking, checkAvailability, deleteBooking, getBookingsByLocation, getRecentBookings, getDashboardStats, cancelBooking} from "../controllers/bookingControllers.js"
 import { requireAuth } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -14,5 +14,6 @@ router.get("/:id", readBooking);
 router.put("/edit/:id", updateBooking);
 router.delete("/:id", deleteBooking);
 router.post("/check-availability", checkAvailability);
+router.post("/cancel", requireAuth, cancelBooking);
 
 export default router;

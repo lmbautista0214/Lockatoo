@@ -4,7 +4,7 @@ const listPricingByLocation = async (locationId) => {
   if (!locationId) return []; 
 
   const res = await fetch(
-    `${API_URL}/w1/api/admin/pricing/location/${locationId}`
+    `${API_URL}/api/admin/pricing/location/${locationId}`
   );
 
   if (!res.ok) {
@@ -15,23 +15,28 @@ const listPricingByLocation = async (locationId) => {
 };
 
 const createPricing = async (data) => {
-    const res = await fetch(`${API_URL}/api/admin/pricing`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    });
+  console.log("Sending pricing:", data);
 
-    if (!res.ok) {
-        throw new Error("Failed to create pricing");
-    }
+  const res = await fetch(`${API_URL}/api/admin/pricing`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
-    return res.json();
+  const responseData = await res.json();
+
+  if (!res.ok) {
+    console.error("Backend error:", responseData);
+    throw new Error(responseData.error || "Failed to create pricing");
+  }
+
+  return responseData;
 };
 
 const updatePricing = async (id, data) => {
-    const res = await fetch(`${API_URL}/w1/api/admin/pricing/${id}`, {
+    const res = await fetch(`${API_URL}/api/admin/pricing/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -47,7 +52,7 @@ const updatePricing = async (id, data) => {
 };
 
 const deletePricing = async (id) => {
-    const res = await fetch(`${API_URL}/w1/api/admin/pricing/${id}`, {
+    const res = await fetch(`${API_URL}/api/admin/pricing/${id}`, {
         method: "DELETE"
     });
 
@@ -59,7 +64,7 @@ const deletePricing = async (id) => {
 };
 
 const readPricing = async (id) => {
-    const res = await fetch(`${API_URL}/w1/api/admin/pricing/${id}`);
+    const res = await fetch(`${API_URL}/api/admin/pricing/${id}`);
 
     if (!res.ok) {
         throw new Error("Failed to retrieve pricing");
