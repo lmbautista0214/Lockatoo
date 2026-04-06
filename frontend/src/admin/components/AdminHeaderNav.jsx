@@ -18,14 +18,7 @@ export const AdminHeaderNav = () => {
     { name: "Dashboard", to: "/admin/dashboard", icon: "dashboard" },
     { name: "Manage Bookings", to: "/admin/bookings", icon: "booking" },
     { name: "Manage Lockers", to: "/lockers", icon: "location-pin" },
-    { name: "Manage Rates", to: "/pricing", icon: "locker" },
-
-    // { name: "Rates", to: "/admin/rates", icon: "rates" },
-    // {
-    //   name: "Profile Settings",
-    //   to: "/admin/profile-settings",
-    //   icon: "settings",
-    // },
+    { name: "Manage Rates", to: "/pricing", icon: "price-tag" }, // ✅ updated
   ];
 
   return (
