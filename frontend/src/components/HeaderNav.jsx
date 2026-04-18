@@ -57,12 +57,11 @@ export const HeaderNav = () => {
         className="sticky top-0 z-[1000] px-4 md:px-6 py-4 flex items-center justify-between
                    bg-gradient-to-r from-[#FFF8EF] to-[#FFE5D9] shadow-sm"
       >
-        {/* LOGO */}
+        {/* LOGO (SAFE PATH) */}
         <a
           href="/dashboard"
           className="flex items-center gap-3 transform transition hover:scale-105"
         >
-          {/* FIXED: public folder path */}
           <img
             src="/icons/lockatoo.png"
             alt="Lockatoo Logo"
@@ -84,22 +83,16 @@ export const HeaderNav = () => {
 
           <button
             onClick={toggleNav}
-            className="flex flex-col justify-center items-center w-10 h-10 rounded-lg focus:outline-none"
+            className="flex flex-col justify-center items-center w-10 h-10 rounded-lg"
           >
             <span
-              className={`block w-6 h-0.5 bg-gray-700 transform transition duration-300 ${
-                navOpen ? "rotate-45 translate-y-1.5" : ""
-              }`}
+              className={`block w-6 h-0.5 bg-gray-700 transition ${navOpen ? "rotate-45 translate-y-1.5" : ""}`}
             />
             <span
-              className={`block w-6 h-0.5 bg-gray-700 my-1 transition duration-300 ${
-                navOpen ? "opacity-0" : ""
-              }`}
+              className={`block w-6 h-0.5 bg-gray-700 my-1 transition ${navOpen ? "opacity-0" : ""}`}
             />
             <span
-              className={`block w-6 h-0.5 bg-gray-700 transform transition duration-300 ${
-                navOpen ? "-rotate-45 -translate-y-1.5" : ""
-              }`}
+              className={`block w-6 h-0.5 bg-gray-700 transition ${navOpen ? "-rotate-45 -translate-y-1.5" : ""}`}
             />
           </button>
         </div>
@@ -117,9 +110,8 @@ export const HeaderNav = () => {
             <li key={item.name} className="w-full">
               <NavLink
                 to={item.to}
-                className="flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#FF6B35] hover:text-white group"
+                className="flex items-center gap-3 px-6 py-3 rounded-lg hover:bg-[#FF6B35] hover:text-white group"
               >
-                {/* FIXED ICON PATH */}
                 <img
                   src={`/icons/${item.icon}-black.svg`}
                   className="w-5 h-5 group-hover:hidden"
