@@ -1,6 +1,6 @@
 import { Locker } from "../models/lockerModel.js";
 import mongoose from "mongoose";
-import {Booking} from "../models/bookingModel.js";
+import { Booking } from "../models/bookingModel.js";
 import Location from "../models/locationModel.js";
 
 export const createLockers = async (req, res) => {
@@ -52,7 +52,7 @@ export const viewLockers = async (req, res) => {
 
     if (!locationId) {
       return res.status(400).json({ message: "Location ID is required" });
-    };
+    }
 
     const lockers = await Locker.find({ locationId });
 
@@ -60,10 +60,9 @@ export const viewLockers = async (req, res) => {
       lockers,
       count: lockers.length,
     });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
-  };
+  }
 };
 
 export const getAllLockers = async (req, res) => {
@@ -123,7 +122,6 @@ export const deleteLocker = async (req, res) => {
   }
 };
 
-
 export const getAvailableLockers = async (req, res) => {
   try {
     const { locationId, start_datetime, end_datetime } = req.body;
@@ -134,7 +132,7 @@ export const getAvailableLockers = async (req, res) => {
 
     const parsedLocationId = new mongoose.Types.ObjectId(locationId);
 
-    const lockers = await Locker.find({locationId: parsedLocationId});
+    const lockers = await Locker.find({ locationId: parsedLocationId });
 
     const conflictingBookings = await Booking.find({
       locationId: parsedLocationId,
@@ -148,13 +146,13 @@ export const getAvailableLockers = async (req, res) => {
     });
 
     const bookedLockerIds = conflictingBookings
-      .filter(booked => booked.lockerId)
-      .map(booked => booked.lockerId.toString())
+      .filter((booked) => booked.lockerId)
+      .map((booked) => booked.lockerId.toString());
 
     const availableLockers = lockers.filter(
       (locker) =>
         locker.status === "available" &&
-        !bookedLockerIds.includes(locker._id.toString())
+        !bookedLockerIds.includes(locker._id.toString()),
     );
 
     res.json({
@@ -162,7 +160,7 @@ export const getAvailableLockers = async (req, res) => {
       count: availableLockers.length,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message});
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -174,16 +172,15 @@ export const getLockerSizesByLocation = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid location ID" });
     }
 
-    const lockers = await Locker.find({ locationId: locationId });
+    const lockers = await Locker.find({ locationId });
 
     if (!lockers || lockers.length === 0) {
       return res.json([]);
     }
 
-    const sizes = [...new Set(lockers.map(l => l.size))];
+    const sizes = [...new Set(lockers.map((l) => l.size))];
 
     res.json(sizes);
-
   } catch (error) {
     console.error("LOCKER SIZE ERROR:", error);
     res.status(500).json({ message: error.message });
@@ -229,7 +226,6 @@ export const getLockerStatusStats = async (req, res) => {
     });
 
     res.json(stats);
-
   } catch (err) {
     console.error("LOCKER STATUS ERROR:", err);
     res.status(500).json({ error: err.message });

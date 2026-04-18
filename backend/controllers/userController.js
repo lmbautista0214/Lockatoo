@@ -7,12 +7,12 @@ const readDetails = async (req, res) => {
     const userData = await User.findById(id);
 
     if (!userData) {
-      res.json({ error: "User details not found" });
-      return;
+      return res.status(404).json({ error: "User details not found" });
     }
+
     res.json(userData);
   } catch (err) {
-    res.json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -21,11 +21,14 @@ const updateDetails = async (req, res) => {
     const id = req.params.id;
     const newData = req.body;
 
-    const userData = await User.findByIdAndUpdate(id, newData);
+    const userData = await User.findByIdAndUpdate(id, newData, {
+      new: true,
+      runValidators: true,
+    });
 
     res.json(userData);
   } catch (err) {
-    res.json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -40,14 +43,10 @@ const updatePassword = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(oldPassword.trim(), user.password);
-    console.log("ismatch?", isMatch);
+
     if (!isMatch)
       return res.status(400).json({
         message: "Incorrect old password",
-        debug: {
-          input: oldPassword,
-          userId: req.user.id,
-        },
       });
 
     user.password = newPassword;
@@ -57,7 +56,7 @@ const updatePassword = async (req, res) => {
 
     res.status(200).json({ message: "Password updated successfully" });
   } catch (err) {
-    res.json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -69,7 +68,7 @@ const deleteUser = async (req, res) => {
 
     res.json({ message: "Successfully deleted!" });
   } catch (err) {
-    res.json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 

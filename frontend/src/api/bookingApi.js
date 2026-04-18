@@ -8,6 +8,7 @@ export const fetchUserBookings = async () => {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },
+      credentials: "include",
     });
 
     const data = await res.json();
@@ -24,9 +25,7 @@ export const fetchBookingStats = async () => {
   return {
     total: bookings.length,
     active: bookings.filter(
-      (b) =>
-        b.bookingStatus === "reserved" ||
-        b.bookingStatus === "active"
+      (b) => b.bookingStatus === "reserved" || b.bookingStatus === "active",
     ).length,
   };
 };
@@ -35,7 +34,7 @@ export const fetchActiveBookingsList = async () => {
   const bookings = await fetchUserBookings();
 
   return bookings.filter((b) =>
-    ["reserved", "active"].includes(b.bookingStatus)
+    ["reserved", "active"].includes(b.bookingStatus),
   );
 };
 
@@ -66,8 +65,9 @@ export const getRecentBookings = async () => {
 export const getBookingsByLocation = async () => {
   const res = await fetch(`${API_URL}/api/booking/bookings-by-location`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${getToken()}`,
     },
+    credentials: "include",
   });
 
   if (!res.ok) throw new Error("Failed to fetch");

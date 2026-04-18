@@ -25,6 +25,7 @@ export const fetchAdminStats = async () => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
+    credentials: "include",
   });
 
   if (!res.ok) {

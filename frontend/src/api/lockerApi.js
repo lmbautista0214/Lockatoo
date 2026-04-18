@@ -1,6 +1,6 @@
 import { getLocations } from "./locationApi";
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getHeaders = () => ({
   "Content-Type": "application/json",
@@ -10,6 +10,7 @@ const getHeaders = () => ({
 export const getLockers = async (locationId) => {
   const res = await fetch(`${API_URL}/api/lockers/view/${locationId}`, {
     headers: getHeaders(),
+    credentials: "include",
   });
   return res.json();
 };
@@ -18,6 +19,7 @@ export const createLockersApi = async (payload) => {
   const res = await fetch(`${API_URL}/api/lockers/add`, {
     method: "POST",
     headers: getHeaders(),
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   return res.json();
@@ -27,6 +29,7 @@ export const updateLockerStatusApi = async (id, status) => {
   const res = await fetch(`${API_URL}/api/lockers/${id}`, {
     method: "PATCH",
     headers: getHeaders(),
+    credentials: "include",
     body: JSON.stringify({ status }),
   });
   return res.json();
@@ -36,6 +39,7 @@ export const deleteLockerApi = async (id) => {
   const res = await fetch(`${API_URL}/api/lockers/${id}`, {
     method: "DELETE",
     headers: getHeaders(),
+    credentials: "include",
   });
   return res.json();
 };
@@ -46,8 +50,8 @@ export const getLockerSizesByLocation = async (locationId) => {
   const res = await fetch(
     `${API_URL}/api/lockers/location/${locationId}/sizes`,
     {
-      credentials: "include", 
-    }
+      credentials: "include",
+    },
   );
 
   if (!res.ok) {
@@ -59,7 +63,7 @@ export const getLockerSizesByLocation = async (locationId) => {
 
 export const fetchAvailableLockersCount = async () => {
   try {
-    const locations = await getLocations(); 
+    const locations = await getLocations();
 
     let totalAvailable = 0;
 
@@ -68,9 +72,7 @@ export const fetchAvailableLockersCount = async () => {
 
       const lockers = data.lockers || data || [];
 
-      const available = lockers.filter(
-        (l) => l.status === "available"
-      ).length;
+      const available = lockers.filter((l) => l.status === "available").length;
 
       totalAvailable += available;
     }

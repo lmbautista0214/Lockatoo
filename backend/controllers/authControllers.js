@@ -2,15 +2,19 @@ import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-// import { Resend } from "resend";
-
-// const resend = new Resend(process.env.RESEND_API_KEY);
 import resend from "../configs/emailConfig.js";
 
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
     expiresIn: "3h",
   });
+};
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "None",
+  maxAge: 1000 * 60 * 60 * 3,
 };
 
 export const register = async (req, res) => {
@@ -45,12 +49,7 @@ export const register = async (req, res) => {
 
     const token = generateToken(user);
 
-    res.cookie("auth_jwt", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
-      maxAge: 1000 * 60 * 60 * 3,
-    });
+    res.cookie("auth_jwt", token, cookieOptions);
 
     res.status(201).json({
       message: "User registered successfully",
@@ -93,12 +92,7 @@ export const login = async (req, res) => {
 
     const token = generateToken(user);
 
-    res.cookie("auth_jwt", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
-      maxAge: 1000 * 60 * 60 * 3,
-    });
+    res.cookie("auth_jwt", token, cookieOptions);
 
     res.status(200).json({
       message: "Login successful",
@@ -117,11 +111,9 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
-    res.cookie("jwt", "", {
-      httpOnly: true,
+    res.cookie("auth_jwt", "", {
+      ...cookieOptions,
       expires: new Date(0),
-      secure: false,
-      sameSite: "Lax",
     });
 
     res.status(200).json({ message: "Logged out successfully" });
@@ -148,8 +140,7 @@ export const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 1000 * 60 * 15;
     await user.save();
 
-    const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
-    // const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     await resend.emails.send({
       from: "Lockatoo <onboarding@resend.dev>",

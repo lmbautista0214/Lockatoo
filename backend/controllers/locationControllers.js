@@ -55,22 +55,19 @@ export const createLocation = async (req, res, next) => {
   }
 };
 
-// READ ALL with search + filter
+// READ ALL
 export const getAllLocations = async (req, res, next) => {
   try {
     let query = {};
 
-    // Restrict attendants to their own locations
     if (req.user.role === "attendant") {
       query.createdBy = req.user.id;
     }
 
-    // Search by locationName (case-insensitive)
     if (req.query.search) {
       query.locationName = { $regex: req.query.search, $options: "i" };
     }
 
-    // Filter by status
     if (req.query.status) {
       query.status = req.query.status;
     }
@@ -201,7 +198,7 @@ export const deleteLocation = async (req, res, next) => {
   }
 };
 
-// NEARBY SEARCH
+// NEARBY
 export const getNearbyLocations = async (req, res, next) => {
   try {
     const { lat, lng, distance = 5000 } = req.query;

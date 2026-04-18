@@ -1,10 +1,9 @@
 import paypal from "@paypal/checkout-server-sdk";
 import client from "../configs/paypalClient.js";
 import Payment from "../models/paymentModel.js";
-import {Booking} from "../models/bookingModel.js";
+import { Booking } from "../models/bookingModel.js";
 import Location from "../models/locationModel.js";
 import { sendBookingEmail } from "./sendEmailController.js";
-
 
 const createPayPalOrder = async (req, res) => {
   const { amount } = req.body;
@@ -31,71 +30,6 @@ const createPayPalOrder = async (req, res) => {
   }
 };
 
-// const capturePayPalOrder = async (req, res) => {
-//   const { orderId, bookingId, userId, amount } = req.body;
-
-//   const request = new paypal.orders.OrdersCaptureRequest(orderId);
-
-//   try {
-//     const capture = await client.execute(request);
-// console.log("CAPTURE RESULT:", capture.result);
-
-// const payer = capture.result.payer;
-
-//     const payment = await Payment.create({
-//       userId,
-//       bookingId,
-//       amount,
-//       paypalOrderId: orderId,
-//       paymentStatus: "completed",
-//       paypalDetails: {
-//         payerId: payer.payer_id,
-//         email: payer.email_address,
-//         captureId: capture.result.id
-//       },
-//     });
-
-//     const updatedBooking = await Booking.findByIdAndUpdate(
-//       bookingId,
-//       {
-//         bookingStatus: { $in: ["reserved", "active"] },
-//         paymentStatus: "completed",
-//         payment: payment._id,
-//       },
-//       { new: true }
-//     )
-//     .populate("locationId")
-//     .populate("userId");
-
-//     if (!updatedBooking) {
-//       throw new Error("Booking not found");
-//     }
-
-//     try {
-//       const userEmail =
-//         updatedBooking.userId?.email || payer.email_address;
-
-//       await sendBookingEmail(
-//         "confirmation",
-//         updatedBooking,
-//         userEmail
-//       );
-//     } catch (emailErr) {
-//       console.error("EMAIL FAILED:", emailErr.message);
-//     }
-
-//     res.json({
-//       success: true,
-//       payment,
-//       booking: updatedBooking,
-//       captureData: capture.result,
-//     });
-    
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
-
 const capturePayPalOrder = async (req, res) => {
   const { orderId, bookingId, amount } = req.body;
   const userId = req.user?.id;
@@ -104,7 +38,6 @@ const capturePayPalOrder = async (req, res) => {
 
   try {
     const capture = await client.execute(request);
-    console.log("CAPTURE RESULT:", capture.result);
 
     const payer = capture.result?.payer || {};
 
@@ -117,7 +50,7 @@ const capturePayPalOrder = async (req, res) => {
       paypalDetails: {
         payerId: payer.payer_id,
         email: payer.email_address,
-        captureId: capture.result.id
+        captureId: capture.result.id,
       },
     });
 
@@ -128,25 +61,20 @@ const capturePayPalOrder = async (req, res) => {
         paymentStatus: "completed",
         payment: payment._id,
       },
-      { new: true }
+      { new: true },
     )
       .populate("locationId")
       .populate("lockerId")
       .populate("user");
 
     if (!updatedBooking) {
-      throw new Error("Booking not found");
+      return res.status(404).json({ message: "Booking not found" });
     }
 
     try {
-      const userEmail =
-        updatedBooking.user?.email || payer.email_address;
+      const userEmail = updatedBooking.user?.email || payer.email_address;
 
-      await sendBookingEmail(
-        "confirmation",
-        updatedBooking,
-        userEmail
-      );
+      await sendBookingEmail("confirmation", updatedBooking, userEmail);
     } catch (emailErr) {
       console.error("EMAIL FAILED:", emailErr.message);
     }
@@ -157,7 +85,6 @@ const capturePayPalOrder = async (req, res) => {
       booking: updatedBooking,
       captureData: capture.result,
     });
-
   } catch (err) {
     console.error("PAYMENT ERROR:", err);
     res.status(500).json({ error: err.message });
@@ -198,14 +125,12 @@ const getDashboardStatsPayment = async (req, res) => {
         },
       },
       { $unwind: "$bookingData" },
-
       {
         $match: {
           paymentStatus: "completed",
           "bookingData.locationId": { $in: locationIds },
         },
       },
-
       {
         $group: {
           _id: null,
@@ -221,7 +146,6 @@ const getDashboardStatsPayment = async (req, res) => {
       totalBookings,
       totalRevenue,
     });
-
   } catch (err) {
     console.error("DASHBOARD PAYMENT ERROR:", err);
     res.status(500).json({ error: err.message });
