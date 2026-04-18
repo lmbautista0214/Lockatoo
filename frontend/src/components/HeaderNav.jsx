@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { LogoutButton } from "./LogoutButton";
-import lockatooLogo from "../assets/icons/lockatoo.png";
 
 export const HeaderNav = () => {
   const [user, setUser] = useState(null);
@@ -13,6 +12,7 @@ export const HeaderNav = () => {
     async function fetchUser() {
       try {
         const API_URL = import.meta.env.VITE_API_URL;
+
         const res = await fetch(`${API_URL}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -20,20 +20,21 @@ export const HeaderNav = () => {
         });
 
         if (!res.ok) throw new Error("Failed to fetch user");
+
         const data = await res.json();
         setUser(data);
       } catch (err) {
         console.error("Error fetching user:", err);
       }
     }
+
     fetchUser();
   }, []);
 
-  // Calculate dynamic nav top
   useEffect(() => {
     const headerHeight = headerRef.current?.offsetHeight || 0;
     setNavTop(headerHeight);
-  }, [headerRef.current]);
+  }, []);
 
   const toggleNav = () => setNavOpen((prev) => !prev);
 
@@ -41,37 +42,40 @@ export const HeaderNav = () => {
     { name: "Dashboard", to: "/dashboard", icon: "dashboard" },
     { name: "Find Lockers", to: "/find-lockers", icon: "location-pin" },
     { name: "My Bookings", to: "/bookings", icon: "booking" },
-    // { name: "Booking History", to: "/history", icon: "history" },
-    { name: "Profile Settings", to: `/profile-settings/${user?._id}`, icon: "settings" },
+    {
+      name: "Profile Settings",
+      to: `/profile-settings/${user?._id}`,
+      icon: "settings",
+    },
   ];
 
   return (
     <>
-      {/* Header */}
+      {/* HEADER */}
       <header
         ref={headerRef}
         className="sticky top-0 z-[1000] px-4 md:px-6 py-4 flex items-center justify-between
                    bg-gradient-to-r from-[#FFF8EF] to-[#FFE5D9] shadow-sm"
       >
-        {/* Logo */}
+        {/* LOGO */}
         <a
           href="/dashboard"
           className="flex items-center gap-3 transform transition hover:scale-105"
         >
-          {/* Logo without background */}
+          {/* FIXED: public folder path */}
           <img
-            src={lockatooLogo}
+            src="/icons/lockatoo.png"
             alt="Lockatoo Logo"
             className="w-12 h-12 object-contain"
           />
+
           <span className="text-2xl font-bold bg-gradient-to-r from-[#FDB022] to-[#FF6B35] bg-clip-text text-transparent">
             Lockatoo
           </span>
         </a>
 
-        {/* Greeting + Hamburger */}
+        {/* USER + MENU */}
         <div className="flex items-center gap-4">
-          {/* Gradient Greeting */}
           <div className="bg-gradient-to-r from-[#FFF8EF] to-[#FFE5D9] px-4 py-2 rounded-2xl border border-[#FDB022]/20 shadow-sm">
             <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
               👋 {user?.name || "Guest"}
@@ -101,39 +105,40 @@ export const HeaderNav = () => {
         </div>
       </header>
 
-      {/* Nav Menu */}
+      {/* NAV */}
       <nav
         style={{ top: navTop }}
         className={`fixed left-0 w-full bg-gradient-to-r from-[#FFF8EF] to-[#FFE5D9] shadow-md z-[1000] transition-[max-height] duration-500 ease-in-out overflow-hidden ${
           navOpen ? "max-h-screen" : "max-h-0"
         }`}
       >
-        <ul className="flex flex-col items-start gap-2 px-0 py-6 text-sm sm:text-base md:text-lg font-medium text-gray-700">
+        <ul className="flex flex-col gap-2 py-6 text-base font-medium text-gray-700">
           {navItems.map((item) => (
             <li key={item.name} className="w-full">
               <NavLink
                 to={item.to}
-                className="w-full flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#FF6B35] hover:text-white group"
+                className="flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#FF6B35] hover:text-white group"
               >
+                {/* FIXED ICON PATH */}
                 <img
-                  src={`/src/assets/icons/${item.icon}-black.svg`}
+                  src={`/icons/${item.icon}-black.svg`}
+                  className="w-5 h-5 group-hover:hidden"
                   alt={item.name}
-                  className="w-5 h-5 transition-all duration-300 group-hover:hidden"
                 />
                 <img
-                  src={`/src/assets/icons/${item.icon}-white.svg`}
+                  src={`/icons/${item.icon}-white.svg`}
+                  className="w-5 h-5 hidden group-hover:block"
                   alt={item.name}
-                  className="w-5 h-5 hidden transition-all duration-300 group-hover:block"
                 />
-                <span className="transition-all duration-300 group-hover:scale-110 group-hover:ml-2">
+
+                <span className="group-hover:ml-2 transition-all">
                   {item.name}
                 </span>
               </NavLink>
             </li>
           ))}
 
-          {/* Logout */}
-          <li className="w-full px-6 mt-4">
+          <li className="px-6 mt-4">
             <LogoutButton />
           </li>
         </ul>
