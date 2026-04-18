@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { LogoutButton } from "../../components/LogoutButton";
 
-export const AdminHeaderNav = () => {
+const AdminHeaderNav = () => {
   const [navOpen, setNavOpen] = useState(false);
   const headerRef = useRef(null);
   const [navTop, setNavTop] = useState(0);
@@ -10,7 +10,7 @@ export const AdminHeaderNav = () => {
   useEffect(() => {
     const headerHeight = headerRef.current?.offsetHeight || 0;
     setNavTop(headerHeight);
-  }, [headerRef.current]);
+  }, []);
 
   const toggleNav = () => setNavOpen((prev) => !prev);
 
@@ -18,18 +18,16 @@ export const AdminHeaderNav = () => {
     { name: "Dashboard", to: "/admin/dashboard", icon: "dashboard" },
     { name: "Manage Bookings", to: "/admin/bookings", icon: "booking" },
     { name: "Manage Lockers", to: "/lockers", icon: "location-pin" },
-    { name: "Manage Rates", to: "/pricing", icon: "price-tag" }, // ✅ updated
+    { name: "Manage Rates", to: "/pricing", icon: "price-tag" },
   ];
 
   return (
     <>
-      {/* Header */}
       <header
         ref={headerRef}
         className="sticky top-0 z-[1000] px-4 md:px-6 py-4 flex items-center justify-between
                    bg-gradient-to-r from-[#FFF8EF] to-[#FFE5D9] shadow-sm"
       >
-        {/* Logo */}
         <a
           href="/admin/dashboard"
           className="flex items-center gap-3 transform transition hover:scale-105"
@@ -54,7 +52,6 @@ export const AdminHeaderNav = () => {
           </span>
         </a>
 
-        {/* Hamburger */}
         <button
           onClick={toggleNav}
           className="cursor-pointer flex flex-col justify-center items-center w-10 h-10 rounded-lg focus:outline-none"
@@ -77,7 +74,6 @@ export const AdminHeaderNav = () => {
         </button>
       </header>
 
-      {/* Nav Menu */}
       <nav
         style={{ top: navTop }}
         className={`fixed left-0 w-full bg-gradient-to-r from-[#FFF8EF] to-[#FFE5D9] shadow-md z-[1000] transition-[max-height] duration-500 ease-in-out overflow-hidden ${
@@ -91,13 +87,14 @@ export const AdminHeaderNav = () => {
                 to={item.to}
                 className="w-full flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#FF6B35] hover:text-white group"
               >
+                {/* FIXED ICON PATH */}
                 <img
-                  src={`/src/assets/icons/${item.icon}-black.svg`}
+                  src={`/icons/${item.icon}-black.svg`}
                   alt={item.name}
                   className="w-5 h-5 group-hover:hidden"
                 />
                 <img
-                  src={`/src/assets/icons/${item.icon}-white.svg`}
+                  src={`/icons/${item.icon}-white.svg`}
                   alt={item.name}
                   className="w-5 h-5 hidden group-hover:block"
                 />
@@ -108,7 +105,6 @@ export const AdminHeaderNav = () => {
             </li>
           ))}
 
-          {/* Logout */}
           <li className="w-full px-6 mt-4">
             <LogoutButton />
           </li>
@@ -117,3 +113,5 @@ export const AdminHeaderNav = () => {
     </>
   );
 };
+
+export default AdminHeaderNav;
