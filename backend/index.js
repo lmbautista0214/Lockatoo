@@ -21,12 +21,15 @@ connectDB();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: ["http://localhost:5173"],
-    credentials: true,
-  }),
-);
+const corsOptions = {
+  origin: ["https://lockatoo-1.onrender.com", "http://localhost:5173"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/locations", locationRoutes);
