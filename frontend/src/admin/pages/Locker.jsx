@@ -5,13 +5,14 @@ import {
   updateLockerStatusApi,
   deleteLockerApi,
 } from "../../api/lockerApi";
+
 import { LockerFilter } from "../components/Lockers/LockerFilter";
 import { LockerForm } from "../components/Lockers/LockerForm";
 import { LockerGroup } from "../components/Lockers/LockerGroup";
 import { LockerLegend } from "../components/Lockers/LockerLegend";
 
 import toast from "react-hot-toast";
-import { AdminHeaderNav } from "../components/AdminHeaderNav";
+import AdminHeaderNav from "../components/AdminHeaderNav";
 
 export const Locker = () => {
   const [locations, setLocations] = useState([]);
@@ -24,6 +25,7 @@ export const Locker = () => {
     xl: 0,
     xxl: 0,
   });
+
   const [lockerList, setLockerList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeLocker, setActiveLocker] = useState(null);
@@ -103,7 +105,6 @@ export const Locker = () => {
       const updated = await getLockers(locationId);
       setLockerList(updated.lockers || []);
       setActiveLocker(null);
-
       toast.success(`${locker.code} → ${status}`);
     } catch (error) {
       console.error(error);
@@ -183,6 +184,7 @@ export const Locker = () => {
   return (
     <div className="min-h-screen bg-linear-to-r bg-linear-to-br from-[#fff4ed] via-[#ffe8d9] to-[#fffaf5]">
       <AdminHeaderNav />
+
       <div className="max-w-5xl mx-auto p-4 sm:p-6 space-y-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">

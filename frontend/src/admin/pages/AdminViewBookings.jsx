@@ -3,7 +3,7 @@ import { useFetch } from "../../hooks/useFetch";
 import { CancelBooking } from "../../user/components/CancelBooking";
 import { CompleteBooking } from "../components/CompleteBooking";
 import { StartBooking } from "../components/StartBooking";
-import { AdminHeaderNav} from "../components/AdminHeaderNav";
+import AdminHeaderNav from "../components/AdminHeaderNav";
 
 export const AdminViewBookings = () => {
   const listBookingsEndpoint =
@@ -70,29 +70,29 @@ export const AdminViewBookings = () => {
       <div className="block getstarted-section bg-linear-to-b from-[#faf8f7] to-[#FFE5D9] bg-white/10">
         <h2 className="getstarted-title my-2 mt-4">Manage transactions</h2>
 
-      <div className="flex">
-        <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
-          <p className="how-title text-xl">
-            Active bookings:{" "}
-            <span className="text-green-700">{activeCount}</span>
-          </p>
-        </div>
+        <div className="flex">
+          <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
+            <p className="how-title text-xl">
+              Active bookings:{" "}
+              <span className="text-green-700">{activeCount}</span>
+            </p>
+          </div>
 
-        <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
-          <p className="how-title text-xl">
-            Reserved bookings:{" "}
-            <span className="text-yellow-700">{reservedCount}</span>
-          </p>
-        </div>
+          <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
+            <p className="how-title text-xl">
+              Reserved bookings:{" "}
+              <span className="text-yellow-700">{reservedCount}</span>
+            </p>
+          </div>
 
-        <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
-          <p className="how-title text-xl">
-            {" "}
-            Total bookings:{" "}
-            <span className="text-violet-700">{totalCount}</span>
-          </p>
+          <div className="feature-card my-2 mr-2 w-2/3 sm:w-100">
+            <p className="how-title text-xl">
+              {" "}
+              Total bookings:{" "}
+              <span className="text-violet-700">{totalCount}</span>
+            </p>
+          </div>
         </div>
-      </div>
 
         <div className="feature-card my-2">
           <select
@@ -124,33 +124,34 @@ export const AdminViewBookings = () => {
           </select>
         </div>
 
-      <div className="grid sm:grid-cols-2 gap-6 lg:grid-cols-3">
-        {filteredBookings.length === 0 ? (
-          <p>No bookings match the selected filters.</p>
-        ) : (
-          filteredBookings.map((b) => (
-            <div key={b._id} className="form-card bg-white/60">
-              <div className="flex items-end gap-3">
-                <div
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    statusStyles[b.bookingStatus] || "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {b.bookingStatus}
+        <div className="grid sm:grid-cols-2 gap-6 lg:grid-cols-3">
+          {filteredBookings.length === 0 ? (
+            <p>No bookings match the selected filters.</p>
+          ) : (
+            filteredBookings.map((b) => (
+              <div key={b._id} className="form-card bg-white/60">
+                <div className="flex items-end gap-3">
+                  <div
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      statusStyles[b.bookingStatus] ||
+                      "bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    {b.bookingStatus}
+                  </div>
                 </div>
-              </div>
-              <div className="booking-content">
-                <b>Location:</b> {b.locationId?.locationName || "Unknown"}
-              </div>
-              <div className="booking-content">
-                <b>Locker:</b> {b.lockerId?.code || "Unknown"}
-              </div>
-              <div className="booking-content">
-                <b>Start:</b> {new Date(b.start_datetime).toLocaleString()}
-              </div>
-              <div className="booking-content">
-                <b>End:</b> {new Date(b.end_datetime).toLocaleString()}
-              </div>
+                <div className="booking-content">
+                  <b>Location:</b> {b.locationId?.locationName || "Unknown"}
+                </div>
+                <div className="booking-content">
+                  <b>Locker:</b> {b.lockerId?.code || "Unknown"}
+                </div>
+                <div className="booking-content">
+                  <b>Start:</b> {new Date(b.start_datetime).toLocaleString()}
+                </div>
+                <div className="booking-content">
+                  <b>End:</b> {new Date(b.end_datetime).toLocaleString()}
+                </div>
 
                 {b.bookingStatus === "reserved" && (
                   <CancelBooking

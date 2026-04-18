@@ -3,7 +3,7 @@ import LockerPricing from "../components/LockerPricing";
 import RateComparison from "../components/RateComparison";
 import PricingGuidelines from "../components/PricingGuidelines";
 import { listPricingByLocation } from "../api/pricingApi";
-import { AdminHeaderNav } from "../admin/components/AdminHeaderNav";
+import AdminHeaderNav from "../admin/components/AdminHeaderNav";
 
 const Pricing = () => {
   const [pricing, setPricing] = useState([]);
